@@ -76,45 +76,25 @@
 
 </style>
 
-<div layout="row">
-
-    <div class="header">
-        <div class="header-container" layout-padding>
-            <md-button>Add Marker</md-button>
-            <md-button>Delete Marker</md-button>
+<div layout-padding>
+    <form>
+        <md-input-container class="md-block">
+            <label>Point Value</label>
+            <input type="number">
+        </md-input-container>
+        <md-input-container class="md-block">
+            <label>Activation Date</label>
+            <input type="date">
+        </md-input-container>
+        <md-input-container class="md-block">
+            <label>De-Activation Date</label>
+            <input type="date">
+        </md-input-container>
+        <div>
+            <md-button class="md-raised md-primary">Add Marker</md-button>
         </div>
-    </div>
-
-    <div id="map"></div>
-
-    <footer>
-        <div class="footer-container" layout-padding>
-            <h1>Scoreboard</h1>
-
-            <ul class="list-unstyled">
-                <li>
-                    <div>Ted just collected X points for a total of X points</div>
-                </li>
-                <li>
-                    <div>X more points to get 10% off your next purchase of $100 or more at <a
-                        href="#">example.com</a></div>
-                </li>
-            </ul>
-        </div>
-    </footer>
+    </form>
 </div>
-
-
-<script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoicG9sYXJpcy1yaWRlcngiLCJhIjoiWExuREx5ayJ9.qK0_9TwlruP7fRC1hASJAA';
-    var map = new mapboxgl.Map({
-        container: 'map', // container id
-        style: 'mapbox://styles/mapbox/streets-v9', //stylesheet location
-        center: [-93.7604785, 44.8958712], // starting position
-        zoom: 9 // starting zoom
-    });
-</script>
-
 
 <!-- Angular Material requires Angular.js Libraries -->
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
