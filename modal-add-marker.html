@@ -29,15 +29,10 @@
 
     h1 {
         font-size: 25px;
-        font-size: 2.9vw;
+        font-size: 3.9vw;
         margin: 0;
         padding: 0;
         text-transform: uppercase;
-    }
-
-    ul {
-        margin: 0;
-        padding: 0 0 0 10px !important;
     }
 
     html,
@@ -45,38 +40,14 @@
         height: 100% !important;
     }
 
-
-    #map {
-        height: calc(100% - 300px);
-        width: 100%;
-        top: 100px;
-    }
-
     .layout-padding {
         padding: 16px;
-    }
-
-    .header {
-        position: absolute;
-        top: 0;
-        background: black;
-        color: white;
-        /*height: 80px;*/
-        width: 100%;
-    }
-
-    footer {
-        position: absolute;
-        bottom: 0;
-        background: black;
-        color: white;
-        height: 200px;
-        width: 100%;
     }
 
 </style>
 
 <div layout-padding>
+    <h1>Add Marker</h1>
     <form>
         <md-input-container class="md-block">
             <label>Point Value</label>
@@ -91,6 +62,7 @@
             <input type="date">
         </md-input-container>
         <div>
+            <md-button>Cancel</md-button>
             <md-button class="md-raised md-primary">Add Marker</md-button>
         </div>
     </form>

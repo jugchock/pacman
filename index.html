@@ -29,7 +29,7 @@
 
     h1 {
         font-size: 25px;
-        font-size: 2.9vw;
+        font-size: 3.9vw;
         margin: 0;
         padding: 0;
         text-transform: uppercase;
@@ -96,8 +96,9 @@
                     <div>Ted just collected X points for a total of X points</div>
                 </li>
                 <li>
-                    <div>X more points to get 10% off your next purchase of $100 or more at <a
-                        href="#">example.com</a></div>
+                    <div ng-show="$ctrl.isGold"><img src="src/assets/images/gold-medal.png" alt="Gold"></div>
+                    <div ng-show="$ctrl.isSilver"><img src="src/assets/images/silver-medal.png" alt="Silver"></div>
+                    <div ng-show="$ctrl.isBronze"><img src="src/assets/images/bronze-medal.png" alt="Bronze"></div>
                 </li>
             </ul>
         </div>
@@ -113,6 +114,9 @@
         center: [-93.7604785, 44.8958712], // starting position
         zoom: 9 // starting zoom
     });
+
+    map.addControl(new mapboxgl.GeolocateControl());
+    map.addControl(new mapboxgl.NavigationControl());
 </script>
 
 
