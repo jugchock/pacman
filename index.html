@@ -1,0 +1,127 @@
+<html lang="en" >
+<head>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.28.0/mapbox-gl.css' rel='stylesheet' />
+
+    <!-- Angular Material style sheet -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+</head>
+<body ng-app="BlankApp" ng-cloak>
+
+<style>
+    body {
+        background: #e8e8e8;
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        color: #ee1c24;
+    }
+
+    li {
+        padding: 10px 0;
+        list-style: none;
+    }
+
+    h1 {
+        text-transform: uppercase;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0 0 0 10px !important;
+    }
+
+    html,
+    body,
+    #map-container {
+        height: 100%;
+    }
+
+    #map {
+        height: calc(100% - 50px);
+    }
+
+    .layout-padding {
+        padding: 16px;
+    }
+
+    .map-footer {
+        background: black;
+        color: white;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+    }
+
+    .side-bar {
+        background: black;
+        color: white;
+    }
+
+</style>
+
+
+
+<div layout="row">
+    <div id="map-container" flex="70">
+        <div id="map"></div>
+        <footer class="map-footer">
+            <div layout-padding class="inner">
+                footer
+            </div>
+        </footer>
+    </div>
+    <div flex="30" layout-padding class="side-bar">
+        <h1>Scoreboard</h1>
+
+        <ul class="list-unstyled">
+            <li>
+                <div>Ted just collected X points for a total of X points</div>
+            </li>
+            <li>
+                <div>X more points to get 10% off your next purchase of $100 or more at <a
+                    href="#">example.com</a></div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoicG9sYXJpcy1yaWRlcngiLCJhIjoiWExuREx5ayJ9.qK0_9TwlruP7fRC1hASJAA';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/streets-v9', //stylesheet location
+        center: [-93.7604785, 44.8958712], // starting position
+        zoom: 9 // starting zoom
+    });
+</script>
+
+
+<!-- Angular Material requires Angular.js Libraries -->
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+<!-- Angular Material Library -->
+<script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+
+<!-- Your application bootstrap  -->
+<script type="text/javascript">
+    /**
+     * You must include the dependency on 'ngMaterial'
+     */
+    angular.module('BlankApp', ['ngMaterial']);
+</script>
+
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->
