@@ -88,6 +88,21 @@ export class AppComponent implements OnInit {
                           "beacon-visible": true,
                           "beacon-value": 8
                       }
+                  }, {
+                      "type": "Feature",
+                      "geometry": {
+                          "type": "Point",
+                          "coordinates": [-93.406861, 45.059064]
+                      },
+                      "properties": {
+                          "title": "Polaris 2",
+                          "marker-color": "#ffbc38",
+                          "marker-symbol": "secondary_marker",
+                          "beacon-hide": true,
+                          "beacon-sensitivity": 1,
+                          "beacon-visible": true,
+                          "beacon-value": 8
+                      }
                   }]
               }
           });
