@@ -57,7 +57,11 @@ export class AppComponent implements OnInit {
                         },
                         "properties": {
                             "title": "Jug",
-                            "marker-symbol": "default_marker"
+                            "marker-symbol": "default_marker",
+                            "beacon-hide": false,
+                            "beacon-sensitivity": 8,
+                            "beacon-visible": true,
+                            "beacon-value": 1
                         }
                     }, {
                         "type": "Feature",
@@ -68,7 +72,11 @@ export class AppComponent implements OnInit {
                         "properties": {
                             "title": "Troy",
                             "marker-color": "#ff00ff",
-                            "marker-symbol": "secondary_marker"
+                            "marker-symbol": "secondary_marker",
+                            "beacon-hide": false,
+                            "beacon-sensitivity": 5,
+                            "beacon-visible": true,
+                            "beacon-value": 5
                         }
                     }, {
                         "type": "Feature",
@@ -78,8 +86,27 @@ export class AppComponent implements OnInit {
                         },
                         "properties": {
                             "title": "Polaris",
-                            "marker-color": "#ff00ff",
-                            "marker-symbol": "secondary_marker"
+                            "marker-color": "#ffbc38",
+                            "marker-symbol": "secondary_marker",
+                            "beacon-hide": true,
+                            "beacon-sensitivity": 1,
+                            "beacon-visible": true,
+                            "beacon-value": 8
+                        }
+                    }, {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Point",
+                            "coordinates": [-93.406861, 45.059064]
+                        },
+                        "properties": {
+                            "title": "Polaris 2",
+                            "marker-color": "#ffbc38",
+                            "marker-symbol": "secondary_marker",
+                            "beacon-hide": true,
+                            "beacon-sensitivity": 1,
+                            "beacon-visible": true,
+                            "beacon-value": 8
                         }
                     }]
                 }
@@ -160,8 +187,8 @@ export class AppComponent implements OnInit {
         });
 
 
-    // Use the same approach as above to indicate that the symbols are clickable
-    // by changing the cursor style to 'pointer'.
+        // Use the same approach as above to indicate that the symbols are clickable
+        // by changing the cursor style to 'pointer'.
         map.on('mousemove', function (e) {
             var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
             map.getCanvas().style.cursor = features.length ? 'pointer' : '';

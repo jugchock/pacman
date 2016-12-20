@@ -5,6 +5,20 @@ body {
     padding: 0;
 }
 
+#info {
+    display: block;
+    position: relative;
+    margin: 0px auto;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 3px;
+    font-size: 12px;
+    text-align: center;
+    color: #222;
+    background: #fff;
+}
+
 html,
 body,
 .pacman {
