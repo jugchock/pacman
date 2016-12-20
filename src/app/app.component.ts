@@ -184,6 +184,15 @@ export class AppComponent implements OnInit {
                 // Get coordinates from the symbol and center the map on those coordinates
                 map.flyTo({center: features[0].geometry.coordinates});
             }
+
+            var feature = features[0];
+
+            // Populate the popup and set its coordinates
+            // based on the feature found.
+            var popup = new mapboxgl.Popup()
+                .setLngLat(feature.geometry.coordinates)
+                .setHTML(feature.properties.title)
+                .addTo(map);
         });
 
 
