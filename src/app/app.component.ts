@@ -196,7 +196,7 @@ export class AppComponent implements OnInit {
             var popup = new mapboxgl.Popup()
                 .setLngLat(feature.geometry.coordinates)
                 .setHTML(feature.properties.title)
-                .addTo(map);
+                .addTo(this.map);
         });
 
 
