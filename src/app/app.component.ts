@@ -58,9 +58,9 @@ export class AppComponent implements OnInit {
                         "properties": {
                             "title": "Jug",
                             "marker-symbol": "default_marker",
-                            "beacon-hide": false,
+                            "beacon-hides": false,
                             "beacon-proximity": 8,
-                            "beacon-visible": true,
+                            "beacon-is-visible": true,
                             "beacon-value": 1
                         }
                     }, {
@@ -73,9 +73,9 @@ export class AppComponent implements OnInit {
                             "title": "Troy",
                             "marker-color": "#ff00ff",
                             "marker-symbol": "secondary_marker",
-                            "beacon-hide": false,
+                            "beacon-hides": false,
                             "beacon-proximity": 5,
-                            "beacon-visible": true,
+                            "beacon-is-visible": true,
                             "beacon-value": 5
                         }
                     }, {
@@ -88,9 +88,9 @@ export class AppComponent implements OnInit {
                             "title": "Polaris",
                             "marker-color": "#ffbc38",
                             "marker-symbol": "secondary_marker",
-                            "beacon-hide": true,
+                            "beacon-hides": true,
                             "beacon-proximity": 1,
-                            "beacon-visible": true,
+                            "beacon-is-visible": true,
                             "beacon-value": 8
                         }
                     }, {
@@ -103,9 +103,9 @@ export class AppComponent implements OnInit {
                             "title": "Polaris 2",
                             "marker-color": "#ffbc38",
                             "marker-symbol": "secondary_marker",
-                            "beacon-hide": true,
+                            "beacon-hides": true,
                             "beacon-proximity": 1,
-                            "beacon-visible": true,
+                            "beacon-is-visible": true,
                             "beacon-value": 8
                         }
                     }]
