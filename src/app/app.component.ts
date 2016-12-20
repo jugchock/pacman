@@ -7,42 +7,46 @@ declare const mapboxgl;
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+    map: mapboxgl.Map;
+    lng: number;
+    lat: number;
+    points: number;
+    // debug
+    mapLng: number = 0;
+    mapLat: number = 0;
+    timeSinceUpdate: number;
+
     ngOnInit() {
         mapboxgl.accessToken = 'pk.eyJ1IjoicG9sYXJpcy1yaWRlcngiLCJhIjoiWExuREx5ayJ9.qK0_9TwlruP7fRC1hASJAA';
-        const map: mapboxgl.Map = new mapboxgl.Map({
+        this.map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/outdoors-v9',
             center: [-93.7604785, 44.8958712],
             zoom: 9
         });
 
-        map.addControl(new mapboxgl.NavigationControl());
+        this.map.addControl(new mapboxgl.NavigationControl());
 
-        map.addControl(new mapboxgl.GeolocateControl({
-            positionOptions: {
-                enableHighAccuracy: true
-            },
-            watchPosition: true
-        }));
-
-        var locationWatchStart: number = Date.now();
+        var lastPositionUpdate: number = Date.now();
         var watchID = navigator.geolocation.watchPosition((position) => {
-            let time: number = (Date.now() - locationWatchStart) * 0.001;
-            console.log(time, position.coords.latitude, position.coords.longitude);
+            lastPositionUpdate = Date.now();
+            this.lng = position.coords.longitude;
+            this.lat = position.coords.latitude;
         });
+
+        setInterval(() => {
+            this.timeSinceUpdate = Math.round((Date.now() - lastPositionUpdate) * 0.001);
+        }, 1000);
 
         // debugging
-        map.on('mousemove', function (e) {
-            document.getElementById('info').innerHTML =
-                // e.point is the x, y coordinates of the mousemove event relative
-                // to the top-left corner of the map
-                JSON.stringify(e.point) + '<br />' +
-                // e.lngLat is the longitude, latitude geographical position of the event
-                JSON.stringify(e.lngLat);
+        this.map.on('moveend', () => {
+            var center = this.map.getCenter();
+            this.mapLng = center.lng;
+            this.mapLat = center.lat;
         });
 
-        map.on('style.load', function () {
-            map.addSource('markers', {
+        this.map.on('style.load', () => {
+            this.map.addSource('markers', {
                 "type": "geojson",
                 cluster: true,
                 clusterMaxZoom: 14, // Max zoom to cluster points on
@@ -112,7 +116,7 @@ export class AppComponent implements OnInit {
                 }
             });
 
-            map.addLayer({
+            this.map.addLayer({
                 "id": "markers",
                 "source": "markers",
                 "type": "circle",
@@ -122,7 +126,7 @@ export class AppComponent implements OnInit {
                 }
             });
 
-            map.addLayer({
+            this.map.addLayer({
                 "id": "unclustered-points",
                 "type": "symbol",
                 "source": "markers",
@@ -140,8 +144,8 @@ export class AppComponent implements OnInit {
                 [0, '#39c237']
             ];
 
-            layers.forEach(function (layer, i) {
-                map.addLayer({
+            layers.forEach((layer, i) => {
+                this.map.addLayer({
                     "id": "cluster-" + i,
                     "type": "circle",
                     "source": "markers",
@@ -158,7 +162,7 @@ export class AppComponent implements OnInit {
             });
 
             // Add a layer for the clusters' count labels
-            map.addLayer({
+            this.map.addLayer({
                 "id": "cluster-count",
                 "type": "symbol",
                 "source": "markers",
@@ -174,24 +178,24 @@ export class AppComponent implements OnInit {
 
         });
 
-        map.on('click', function (e) {
+        this.map.on('click', (e) => {
             // Use queryRenderedFeatures to get features at a click event's point
             // Use layer option to avoid getting results from other layers
-            var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
+            var features = this.map.queryRenderedFeatures(e.point, { layers: ['markers'] });
             // if there are features within the given radius of the click event,
             // fly to the location of the click event
             if (features.length) {
                 // Get coordinates from the symbol and center the map on those coordinates
-                map.flyTo({center: features[0].geometry.coordinates});
+                this.map.flyTo({center: features[0].geometry.coordinates});
             }
         });
 
 
         // Use the same approach as above to indicate that the symbols are clickable
         // by changing the cursor style to 'pointer'.
-        map.on('mousemove', function (e) {
-            var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
-            map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+        this.map.on('mousemove', (e) => {
+            var features = this.map.queryRenderedFeatures(e.point, { layers: ['markers'] });
+            this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
         });
     }
 }
