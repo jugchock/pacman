@@ -1,5 +1,6 @@
 body {
     background: #e8e8e8;
+    font-family: 'Raleway', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -20,15 +21,17 @@ body,
 }
 
 .pacman h1 {
-    font-size: 10vw;
+    font-size: 7vw;
     text-transform: uppercase;
 }
 
 .pacman h1,
 .pacman h2,
 .pacman h3 {
+    font-family: 'Raleway', sans-serif;
     margin: 0;
     padding: 0 16px;
+    text-transform: uppercase;
 }
 
 .pacman ul {
@@ -37,13 +40,17 @@ body,
 }
 
 .pacman #map {
-    height: calc(100% - 282px);
+    height: calc(100% - 207px);
     width: 100%;
-    top: 82px;
+    top: 72px;
 }
 
 .pacman .layout-padding {
     padding: 16px;
+}
+
+.pacman .header h1 {
+    padding-top: 16px;
 }
 
 .pacman .header {
@@ -51,7 +58,7 @@ body,
     top: 0;
     background: black;
     color: white;
-    height: 82px;
+    height: 72px;
     width: 100%;
 }
 
@@ -60,6 +67,22 @@ body,
     bottom: 0;
     background: black;
     color: white;
-    height: 200px;
+    height: 135px;
     width: 100%;
+}
+
+.pacman footer h1 {
+    font-size: 10vw;
+}
+
+.flex-grid {
+    display: flex;
+}
+
+.col {
+    flex: 1;
+}
+
+.text-center {
+    text-align: center;
 }

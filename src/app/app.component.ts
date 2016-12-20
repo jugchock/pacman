@@ -8,19 +8,24 @@ declare var mapboxgl;
 })
 export class AppComponent implements OnInit {
   ngOnInit() {
-    mapboxgl.accessToken = 'pk.eyJ1IjoicG9sYXJpcy1yaWRlcngiLCJhIjoiWExuREx5ayJ9.qK0_9TwlruP7fRC1hASJAA';
+      mapboxgl.accessToken = 'pk.eyJ1IjoicG9sYXJpcy1yaWRlcngiLCJhIjoiWExuREx5ayJ9.qK0_9TwlruP7fRC1hASJAA';
       var map = new mapboxgl.Map({
-        container: 'map', // container id
-        style: 'mapbox://styles/mapbox/streets-v9', //stylesheet location
-        center: [-93.7604785, 44.8958712], // starting position
-        zoom: 9 // starting zoom
-    });
+          container: 'map', // container id
+          style: 'mapbox://styles/mapbox/outdoors-v9', //stylesheet location
+          center: [-93.7604785, 44.8958712], // starting position
+          zoom: 9 // starting zoom
+      });
 
-      map.addControl(new mapboxgl.GeolocateControl());
       map.addControl(new mapboxgl.NavigationControl());
 
-      map.on('style.load', function (e) {
-          console.log(e.style.sprite);
+      map.addControl(new mapboxgl.GeolocateControl({
+          positionOptions: {
+              enableHighAccuracy: true
+          },
+          watchPosition: true
+      }));
+
+      map.on('style.load', function () {
           map.addSource('markers', {
               "type": "geojson",
               cluster: true,
@@ -73,12 +78,12 @@ export class AppComponent implements OnInit {
               }
           });
 
-          // Display the earthquake data in three layers, each filtered to a range of
+          // Display the data in three layers, each filtered to a range of
           // count values. Each range gets a different fill color.
           var layers = [
               [150, '#f28cb1'],
               [20, '#f1f075'],
-              [0, '#51bbd6']
+              [0, '#39c237']
           ];
 
           layers.forEach(function (layer, i) {
@@ -88,7 +93,7 @@ export class AppComponent implements OnInit {
                   "source": "markers",
                   "paint": {
                       "circle-color": layer[1],
-                      "circle-radius": 18
+                      "circle-radius": 12
                   },
                   "filter": i === 0 ?
                       [">=", "point_count", layer[0]] :
@@ -109,7 +114,7 @@ export class AppComponent implements OnInit {
                       "DIN Offc Pro Medium",
                       "Arial Unicode MS Bold"
                   ],
-                  "text-size": 12
+                  "text-size": 14
               }
           });
 
