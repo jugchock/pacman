@@ -63,7 +63,7 @@ export class AppComponent implements OnInit {
                             "title": "Jug",
                             "marker-symbol": "default_marker",
                             "beacon-hide": false,
-                            "beacon-sensitivity": 8,
+                            "beacon-proximity": 8,
                             "beacon-visible": true,
                             "beacon-value": 1
                         }
@@ -78,7 +78,7 @@ export class AppComponent implements OnInit {
                             "marker-color": "#ff00ff",
                             "marker-symbol": "secondary_marker",
                             "beacon-hide": false,
-                            "beacon-sensitivity": 5,
+                            "beacon-proximity": 5,
                             "beacon-visible": true,
                             "beacon-value": 5
                         }
@@ -93,7 +93,7 @@ export class AppComponent implements OnInit {
                             "marker-color": "#ffbc38",
                             "marker-symbol": "secondary_marker",
                             "beacon-hide": true,
-                            "beacon-sensitivity": 1,
+                            "beacon-proximity": 1,
                             "beacon-visible": true,
                             "beacon-value": 8
                         }
@@ -108,7 +108,7 @@ export class AppComponent implements OnInit {
                             "marker-color": "#ffbc38",
                             "marker-symbol": "secondary_marker",
                             "beacon-hide": true,
-                            "beacon-sensitivity": 1,
+                            "beacon-proximity": 1,
                             "beacon-visible": true,
                             "beacon-value": 8
                         }
@@ -188,6 +188,15 @@ export class AppComponent implements OnInit {
                 // Get coordinates from the symbol and center the map on those coordinates
                 this.map.flyTo({center: features[0].geometry.coordinates});
             }
+
+            var feature = features[0];
+
+            // Populate the popup and set its coordinates
+            // based on the feature found.
+            var popup = new mapboxgl.Popup()
+                .setLngLat(feature.geometry.coordinates)
+                .setHTML(feature.properties.title)
+                .addTo(map);
         });
 
 
