@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
 
         this.map.addControl(new mapboxgl.NavigationControl());
 
-        var watchID = navigator.geolocation.watchPosition(this.updateLocation);
+        var watchID = navigator.geolocation.watchPosition(this.updateLocation, null, { enableHighAccuracy: true });
 
         this.map.on('style.load', () => {
             this.addMarkerSource();
