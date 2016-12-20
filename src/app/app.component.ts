@@ -25,6 +25,17 @@ export class AppComponent implements OnInit {
           watchPosition: true
       }));
 
+
+      // debugging
+      map.on('mousemove', function (e) {
+          document.getElementById('info').innerHTML =
+              // e.point is the x, y coordinates of the mousemove event relative
+              // to the top-left corner of the map
+              JSON.stringify(e.point) + '<br />' +
+              // e.lngLat is the longitude, latitude geographical position of the event
+              JSON.stringify(e.lngLat);
+      });
+
       map.on('style.load', function () {
           map.addSource('markers', {
               "type": "geojson",
@@ -129,6 +140,26 @@ export class AppComponent implements OnInit {
               }
           });
 
+      });
+
+      map.on('click', function (e) {
+          // Use queryRenderedFeatures to get features at a click event's point
+          // Use layer option to avoid getting results from other layers
+          var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
+          // if there are features within the given radius of the click event,
+          // fly to the location of the click event
+          if (features.length) {
+              // Get coordinates from the symbol and center the map on those coordinates
+              map.flyTo({center: features[0].geometry.coordinates});
+          }
+      });
+
+
+// Use the same approach as above to indicate that the symbols are clickable
+// by changing the cursor style to 'pointer'.
+      map.on('mousemove', function (e) {
+          var features = map.queryRenderedFeatures(e.point, { layers: ['markers'] });
+          map.getCanvas().style.cursor = features.length ? 'pointer' : '';
       });
   }
 }
