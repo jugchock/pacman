@@ -52,7 +52,9 @@ export class AppComponent implements OnInit {
                       },
                       "properties": {
                           "title": "Jug",
-                          "marker-symbol": "default_marker"
+                          "marker-symbol": "default_marker",
+                          "beacon-visible": true,
+                          "beacon-value": 1
                       }
                   }, {
                       "type": "Feature",
@@ -63,7 +65,9 @@ export class AppComponent implements OnInit {
                       "properties": {
                           "title": "Troy",
                           "marker-color": "#ff00ff",
-                          "marker-symbol": "secondary_marker"
+                          "marker-symbol": "secondary_marker",
+                          "beacon-visible": true,
+                          "beacon-value": 5
                       }
                   }, {
                       "type": "Feature",
@@ -73,8 +77,10 @@ export class AppComponent implements OnInit {
                       },
                       "properties": {
                           "title": "Polaris",
-                          "marker-color": "#ff00ff",
-                          "marker-symbol": "secondary_marker"
+                          "marker-color": "#ffb626",
+                          "marker-symbol": "secondary_marker",
+                          "beacon-visible": true,
+                          "beacon-value": 8
                       }
                   }]
               }
