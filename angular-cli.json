@@ -18,9 +18,13 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "styles.scss"
+        "styles.scss",
+        "../node_modules/mapbox-gl/dist/mapbox-gl.css",
+        "assets/angular-material.min.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "../node_modules/mapbox-gl/dist/mapbox-gl.js"
+      ],
       "environments": {
         "source": "environments/environment.ts",
         "dev": "environments/environment.ts",

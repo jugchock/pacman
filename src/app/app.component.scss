@@ -1,0 +1,65 @@
+body {
+    background: #e8e8e8;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body,
+.pacman {
+    height: 100% !important;
+}
+
+.pacman a {
+    color: #ee1c24;
+}
+
+.pacman li {
+    padding: 10px 0;
+    list-style: none;
+}
+
+.pacman h1 {
+    font-size: 10vw;
+    text-transform: uppercase;
+}
+
+.pacman h1,
+.pacman h2,
+.pacman h3 {
+    margin: 0;
+    padding: 0 16px;
+}
+
+.pacman ul {
+    margin: 0;
+    padding: 0 0 0 16px !important;
+}
+
+.pacman #map {
+    height: calc(100% - 282px);
+    width: 100%;
+    top: 82px;
+}
+
+.pacman .layout-padding {
+    padding: 16px;
+}
+
+.pacman .header {
+    position: absolute;
+    top: 0;
+    background: black;
+    color: white;
+    height: 82px;
+    width: 100%;
+}
+
+.pacman footer {
+    position: absolute;
+    bottom: 0;
+    background: black;
+    color: white;
+    height: 200px;
+    width: 100%;
+}
