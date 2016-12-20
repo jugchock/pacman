@@ -53,6 +53,8 @@ export class AppComponent implements OnInit {
                       "properties": {
                           "title": "Jug",
                           "marker-symbol": "default_marker",
+                          "beacon-hide": false,
+                          "beacon-sensitivity": 8,
                           "beacon-visible": true,
                           "beacon-value": 1
                       }
@@ -66,6 +68,8 @@ export class AppComponent implements OnInit {
                           "title": "Troy",
                           "marker-color": "#ff00ff",
                           "marker-symbol": "secondary_marker",
+                          "beacon-hide": false,
+                          "beacon-sensitivity": 5,
                           "beacon-visible": true,
                           "beacon-value": 5
                       }
@@ -77,8 +81,10 @@ export class AppComponent implements OnInit {
                       },
                       "properties": {
                           "title": "Polaris",
-                          "marker-color": "#ffb626",
+                          "marker-color": "#ffbc38",
                           "marker-symbol": "secondary_marker",
+                          "beacon-hide": true,
+                          "beacon-sensitivity": 1,
                           "beacon-visible": true,
                           "beacon-value": 8
                       }
