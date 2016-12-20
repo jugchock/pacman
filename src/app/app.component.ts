@@ -37,11 +37,22 @@ export class AppComponent implements OnInit {
                       "type": "Feature",
                       "geometry": {
                           "type": "Point",
-                          "coordinates": [-93.406794, 45.058967]
+                          "coordinates": [-93.602648, 44.783293]
                       },
                       "properties": {
-                          "title": "Kyle",
+                          "title": "Jug",
                           "marker-symbol": "default_marker"
+                      }
+                  }, {
+                      "type": "Feature",
+                      "geometry": {
+                          "type": "Point",
+                          "coordinates": [-93.760921, 44.896025]
+                      },
+                      "properties": {
+                          "title": "Troy",
+                          "marker-color": "#ff00ff",
+                          "marker-symbol": "secondary_marker"
                       }
                   }, {
                       "type": "Feature",
@@ -50,7 +61,7 @@ export class AppComponent implements OnInit {
                           "coordinates": [-93.406559, 45.058963]
                       },
                       "properties": {
-                          "title": "Troy",
+                          "title": "Polaris",
                           "marker-color": "#ff00ff",
                           "marker-symbol": "secondary_marker"
                       }
