@@ -10,7 +10,7 @@ declare const mapboxgl;
 })
 export class AppComponent implements OnInit {
     map: mapboxgl.Map;
-    beaconMaxProximity: number = 1000;
+    beaconMaxProximity: number = 100;
     beaconResetSeconds: number = 3600;
     currentLng: number;
     currentLat: number;
@@ -237,8 +237,9 @@ export class AppComponent implements OnInit {
     configureDebug() {
         setInterval(() => {
             this.timeSinceUpdate = Math.round((Date.now() - this.lastPositionUpdate) * 0.001);
-            var mapCenter = this.map.getCenter();
-            this.updateLocation({coords: { longitude: mapCenter.lng, latitude: mapCenter.lat } });
+            // local debug
+            // var mapCenter = this.map.getCenter();
+            // this.updateLocation({coords: { longitude: mapCenter.lng, latitude: mapCenter.lat } });
         }, 1000);
     }
 
