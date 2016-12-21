@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
 import { GeoService } from './shared';
 declare const mapboxgl;
@@ -9,18 +10,21 @@ declare const mapboxgl;
 })
 export class AppComponent implements OnInit {
     map: mapboxgl.Map;
-    lng: number;
-    lat: number;
-    points: number;
-    pointsWeek: number;
-    pointsTotal: number;
-    // debug
-    mapLng: number = 0;
-    mapLat: number = 0;
-    timeSinceUpdate: number;
-    lastPositionUpdate: number = Date.now();
+    beaconMaxProximity: number = 100;
+    beaconResetSeconds: number = 3600;
+    currentLng: number;
+    currentLat: number;
+    points: number = 0;
+    pointsWeek: number = 0;
+    pointsTotal: number = 0;
     visibleBeacons: GeoJSON.Feature<GeoJSON.Point>[];
     hiddenBeacons: GeoJSON.Feature<GeoJSON.Point>[];
+    beaconsCaptured = [];
+    message: string;
+
+    // debug
+    timeSinceUpdate: number;
+    lastPositionUpdate: number = Date.now();
 
     constructor(private geoService: GeoService) {}
 
@@ -234,21 +238,14 @@ export class AppComponent implements OnInit {
         setInterval(() => {
             this.timeSinceUpdate = Math.round((Date.now() - this.lastPositionUpdate) * 0.001);
         }, 1000);
-
-        // debugging
-        this.map.on('moveend', () => {
-            var center = this.map.getCenter();
-            this.mapLng = center.lng;
-            this.mapLat = center.lat;
-        });
     }
 
     updateLocation = (position) => {
-        let lng = this.lng = position.coords.longitude;
-        let lat = this.lat = position.coords.latitude;
+        let lng = this.currentLng = position.coords.longitude;
+        let lat = this.currentLat = position.coords.latitude;
         this.map.flyTo({ center: [lng, lat] });
         this.updateLocationMarker(lng, lat);
-        this.getNearbyBeacons(lng, lat);
+        this.checkNearbyBeacons(lng, lat);
 
         // debug
         this.lastPositionUpdate = Date.now();
@@ -268,19 +265,33 @@ export class AppComponent implements OnInit {
         }
     }
 
-    getNearbyBeacons = (lng, lat) => {
+    checkNearbyBeacons = (lng, lat) => {
         if (!this.visibleBeacons) { return; }
-        var result = null;
+        var nearestBeacon = null;
         // TODO: optimize this by narrowing beacons list down to likely candidates before calculating distance
         // or better yet, hard-code min lng and lat diffirences to filter by
         this.visibleBeacons.forEach((beacon, index) => {
             let dist = this.geoService.pointsToRadians(beacon.geometry.coordinates[0], beacon.geometry.coordinates[1], lng, lat);
-            if (result === null || dist < result.dist) {
-                result = { beacon, dist };
+            dist = this.geoService.radiansToMeters(dist);
+            if (nearestBeacon === null || dist < nearestBeacon.dist) {
+                nearestBeacon = { beacon, dist };
             }
         });
-        console.log(result);
-        return result;
+        if (nearestBeacon && nearestBeacon.dist <= this.beaconMaxProximity) {
+            let oldBeacon = _.find(this.beaconsCaptured, { 'beacon.id': nearestBeacon.id });
+            if (!oldBeacon) {
+                this.pointsTotal++;
+                this.beaconsCaptured.push({
+                    beacon: nearestBeacon,
+                    time: Date.now()
+                });
+            } else if (oldBeacon.time < Date.now() - this.beaconResetSeconds * 1000) {
+                this.pointsTotal++;
+                oldBeacon.time = Date.now();
+            } else {
+                this.message = 'You already captured this beacon';
+            }
+        }
     }
 
     onMapClick = (e) => {

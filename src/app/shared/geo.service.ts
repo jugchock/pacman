@@ -23,4 +23,9 @@ export class GeoService {
     degreesToRadians(degrees: number) {
         return degrees * Math.PI / 180;
     }
+
+    radiansToMeters(radians: number) {
+        var meanRadius = 6371008; // mean radius of the earth in meters
+        return radians * meanRadius;
+    }
 }
