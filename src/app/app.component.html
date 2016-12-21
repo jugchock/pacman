@@ -9,7 +9,6 @@
 
       <!--debugging-->
       <div id="info">
-          Map Lng: {{mapLng}} - Map Lat: {{mapLat}}<br/>
           Location Lng: {{lng}} - Location Lat: {{lat}}<br/>
           Seconds since last position update: {{timeSinceUpdate}}
       </div>
@@ -19,15 +18,15 @@
 
               <div class="flex-grid text-center">
                   <div class="col">
-                      <h1>7</h1>
+                      <h1>{{points}}</h1>
                       <div>Today</div>
                   </div>
                   <div class="col">
-                      <h1>42</h1>
+                      <h1>{{pointsWeek}}</h1>
                       <div>Last 7 Days</div>
                   </div>
                   <div class="col">
-                      <h1>316</h1>
+                      <h1>{{pointsTotal}}</h1>
                       <div>Total</div>
                   </div>
               </div>
