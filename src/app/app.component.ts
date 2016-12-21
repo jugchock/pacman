@@ -60,12 +60,10 @@ export class AppComponent implements OnInit {
     }
 
     mapVisibleBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
-        var visibleBeacons = [
-            [-93.602648, 44.783293],
-            [-93.760921, 44.896025],
-            [-93.406559, 45.058963],
-            [-93.406861, 45.059064]
-        ];
+        var troyVisibleBeacons = require('./troy-visible-beacons.json');
+        var jugVisibleBeacons = require('./jug-visible-beacons.json');
+        var polarisVisibleBeacons = require('./polaris-shortpath-visible-beacons.json');
+        var visibleBeacons = troyVisibleBeacons.concat(jugVisibleBeacons, polarisVisibleBeacons);
         return visibleBeacons.map(this.visibleBeacon);
     }
 
@@ -85,7 +83,10 @@ export class AppComponent implements OnInit {
     }
 
     mapHiddenBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
-        var hiddenBeacons = [];
+        var troyHiddenBeacons = require('./troy-hidden-beacons.json');
+        var jugHiddenBeacons = require('./jug-hidden-beacons.json');
+        var polarisHiddenBeacons = require('./polaris-shortpath-hidden-beacons.json');
+        var hiddenBeacons = troyHiddenBeacons.concat(jugHiddenBeacons, polarisHiddenBeacons);
         return hiddenBeacons.map(this.hiddenBeacon);
     }
 
