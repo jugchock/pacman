@@ -10,7 +10,7 @@ declare const mapboxgl;
 })
 export class AppComponent implements OnInit {
     map: mapboxgl.Map;
-    beaconMaxProximity: number = 100;
+    beaconMaxProximity: number = 1000;
     beaconResetSeconds: number = 3600;
     currentLng: number;
     currentLat: number;
@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
 
         this.map.addControl(new mapboxgl.NavigationControl());
 
-        var watchID = navigator.geolocation.watchPosition(this.updateLocation, null, { enableHighAccuracy: true });
+        var watchID = navigator.geolocation.watchPosition(() => this.updateLocation, null, { enableHighAccuracy: true });
 
         this.map.on('style.load', () => {
             this.addBeaconSource();
@@ -49,13 +49,13 @@ export class AppComponent implements OnInit {
             this.addLocationLayer();
         });
 
-        this.map.on('click', this.onMapClick);
-        this.map.on('mousemove', this.onMouseOver);
+        this.map.on('click', () => this.onMapClick);
+        this.map.on('mousemove', () => this.onMouseOver);
 
         this.configureDebug();
     }
 
-    addBeaconSource = () => {
+    addBeaconSource() {
         this.map.addSource('visibleBeacons', {
             type: 'geojson',
             cluster: true,
@@ -79,7 +79,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    mapVisibleBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
+    mapVisibleBeacons(): GeoJSON.Feature<GeoJSON.Point>[] {
         var troyVisibleBeacons = require('./troy-visible-beacons.json');
         var jugVisibleBeacons = require('./jug-visible-beacons.json');
         var polarisShortVisibleBeacons = require('./polaris-shortpath-visible-beacons.json');
@@ -89,7 +89,7 @@ export class AppComponent implements OnInit {
         return this.visibleBeacons;
     }
 
-    createVisibleBeacon = (coords): GeoJSON.Feature<GeoJSON.Point> => {
+    createVisibleBeacon(coords): GeoJSON.Feature<GeoJSON.Point> {
         return {
             id: `${coords[0]}|${coords[1]}`,
             type: 'Feature',
@@ -105,7 +105,7 @@ export class AppComponent implements OnInit {
         };
     }
 
-    mapHiddenBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
+    mapHiddenBeacons(): GeoJSON.Feature<GeoJSON.Point>[] {
         var troyHiddenBeacons = require('./troy-hidden-beacons.json');
         var jugHiddenBeacons = require('./jug-hidden-beacons.json');
         var polarisShortHiddenBeacons = require('./polaris-shortpath-hidden-beacons.json');
@@ -115,7 +115,7 @@ export class AppComponent implements OnInit {
         return this.hiddenBeacons;
     }
 
-    createHiddenBeacon = (coords): GeoJSON.Feature<GeoJSON.Point> => {
+    createHiddenBeacon(coords): GeoJSON.Feature<GeoJSON.Point> {
         return {
             id: `${coords[0]}|${coords[1]}`,
             type: 'Feature',
@@ -131,7 +131,7 @@ export class AppComponent implements OnInit {
         };
     }
 
-    addLocationSource = () => {
+    addLocationSource() {
         var mapCenter = this.map.getCenter();
         var data: GeoJSON.Feature<GeoJSON.Point> = {
             type: 'Feature',
@@ -148,7 +148,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    addBeaconLayers = () => {
+    addBeaconLayers() {
         this.map.addLayer({
             id: 'visibleBeacons',
             source: 'visibleBeacons',
@@ -170,7 +170,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    addClusterLayers = () => {
+    addClusterLayers() {
         this.map.addLayer({
             id: 'unclustered-points',
             type: 'symbol',
@@ -222,7 +222,7 @@ export class AppComponent implements OnInit {
         });
     }
 
-    addLocationLayer = () => {
+    addLocationLayer() {
         this.map.addLayer({
             id: 'location',
             type: 'circle',
@@ -234,13 +234,15 @@ export class AppComponent implements OnInit {
         });
     }
 
-    configureDebug = () => {
+    configureDebug() {
         setInterval(() => {
             this.timeSinceUpdate = Math.round((Date.now() - this.lastPositionUpdate) * 0.001);
+            var mapCenter = this.map.getCenter();
+            this.updateLocation({coords: { longitude: mapCenter.lng, latitude: mapCenter.lat } });
         }, 1000);
     }
 
-    updateLocation = (position) => {
+    updateLocation(position) {
         let lng = this.currentLng = position.coords.longitude;
         let lat = this.currentLat = position.coords.latitude;
         this.map.flyTo({ center: [lng, lat] });
@@ -251,7 +253,7 @@ export class AppComponent implements OnInit {
         this.lastPositionUpdate = Date.now();
     }
 
-    updateLocationMarker = (lng, lat) => {
+    updateLocationMarker(lng, lat) {
         let locationSource: mapboxgl.GeoJSONSource = (this.map.getSource('location') as mapboxgl.GeoJSONSource);
         if (locationSource) {
             locationSource.setData({
@@ -265,7 +267,7 @@ export class AppComponent implements OnInit {
         }
     }
 
-    checkNearbyBeacons = (lng, lat) => {
+    checkNearbyBeacons(lng, lat) {
         if (!this.visibleBeacons) { return; }
         var nearestBeacon = null;
         // TODO: optimize this by narrowing beacons list down to likely candidates before calculating distance
@@ -278,11 +280,11 @@ export class AppComponent implements OnInit {
             }
         });
         if (nearestBeacon && nearestBeacon.dist <= this.beaconMaxProximity) {
-            let oldBeacon = _.find(this.beaconsCaptured, { 'beacon.id': nearestBeacon.id });
+            let oldBeacon = _.find(this.beaconsCaptured, { beacon: { id: nearestBeacon.beacon.id } });
             if (!oldBeacon) {
                 this.pointsTotal++;
                 this.beaconsCaptured.push({
-                    beacon: nearestBeacon,
+                    beacon: nearestBeacon.beacon,
                     time: Date.now()
                 });
             } else if (oldBeacon.time < Date.now() - this.beaconResetSeconds * 1000) {
@@ -294,7 +296,7 @@ export class AppComponent implements OnInit {
         }
     }
 
-    onMapClick = (e) => {
+    onMapClick(e) {
         // Use queryRenderedFeatures to get features at a click event's point
         // Use layer option to avoid getting results from other layers
         var features = this.map.queryRenderedFeatures(e.point, { layers: ['visibleBeacons'] });
@@ -315,7 +317,7 @@ export class AppComponent implements OnInit {
             .addTo(this.map);
     }
 
-    onMouseOver = (e) => {
+    onMouseOver(e) {
         // Use the same approach as above to indicate that the symbols are clickable
         // by changing the cursor style to 'pointer'.
         if (!this.map.loaded()) { return; }
