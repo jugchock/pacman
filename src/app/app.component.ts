@@ -47,69 +47,7 @@ export class AppComponent implements OnInit {
     addMarkerSource = () => {
         var data: GeoJSON.FeatureCollection<GeoJSON.Point> = {
             type: 'FeatureCollection',
-            features: [{
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [-93.602648, 44.783293]
-                },
-                properties: {
-                    title: 'Jug',
-                    'marker-symbol': 'default_marker',
-                    'beacon-hides': false,
-                    'beacon-proximity': 8,
-                    'beacon-is-visible': true,
-                    'beacon-value': 1
-                }
-            },
-            {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [-93.760921, 44.896025]
-                },
-                properties: {
-                    title: 'Troy',
-                    'marker-color': '#ff00ff',
-                    'marker-symbol': 'secondary_marker',
-                    'beacon-hides': false,
-                    'beacon-proximity': 5,
-                    'beacon-is-visible': true,
-                    'beacon-value': 5
-                }
-            },
-            {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [-93.406559, 45.058963]
-                },
-                properties: {
-                    title: 'Polaris',
-                    'marker-color': '#ffbc38',
-                    'marker-symbol': 'secondary_marker',
-                    'beacon-hides': true,
-                    'beacon-proximity': 1,
-                    'beacon-is-visible': true,
-                    'beacon-value': 8
-                }
-            },
-            {
-                type: 'Feature',
-                geometry: {
-                    type: 'Point',
-                    coordinates: [-93.406861, 45.059064]
-                },
-                properties: {
-                    title: 'Polaris 2',
-                    'marker-color': '#ffbc38',
-                    'marker-symbol': 'secondary_marker',
-                    'beacon-hides': true,
-                    'beacon-proximity': 1,
-                    'beacon-is-visible': true,
-                    'beacon-value': 8
-                }
-            }]
+            features: this.mapVisibleBeacons()
         };
 
         this.map.addSource('markers', {
@@ -121,12 +59,57 @@ export class AppComponent implements OnInit {
         });
     }
 
+    mapVisibleBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
+        var visibleBeacons = [
+            [-93.602648, 44.783293],
+            [-93.760921, 44.896025],
+            [-93.406559, 45.058963],
+            [-93.406861, 45.059064]
+        ];
+        return visibleBeacons.map(this.visibleBeacon);
+    }
+
+    visibleBeacon = (coords): GeoJSON.Feature<GeoJSON.Point> => {
+        return {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: coords
+            },
+            properties: {
+                markerSymbol: 'default_marker',
+                isVisible: true,
+                value: 1
+            }
+        };
+    }
+
+    mapHiddenBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
+        var hiddenBeacons = [];
+        return hiddenBeacons.map(this.hiddenBeacon);
+    }
+
+    hiddenBeacon = (coords): GeoJSON.Feature<GeoJSON.Point> => {
+        return {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: coords
+            },
+            properties: {
+                markerSymbol: 'default_marker',
+                isVisible: false,
+                value: 1
+            }
+        };
+    }
+
     addLocationSource = () => {
         var data: GeoJSON.Feature<GeoJSON.Point> = {
             type: 'Feature',
             geometry: {
                 type: 'Point',
-                coordinates: [-93.54917076, 44.91671739]
+                coordinates: []
             },
             properties: {}
         };
