@@ -45,25 +45,35 @@ export class AppComponent implements OnInit {
     }
 
     addMarkerSource = () => {
-        var data: GeoJSON.FeatureCollection<GeoJSON.Point> = {
-            type: 'FeatureCollection',
-            features: this.mapVisibleBeacons()
-        };
-
         this.map.addSource('markers', {
             type: 'geojson',
             cluster: true,
             clusterMaxZoom: 14, // Max zoom to cluster points on
             clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
-            data
+            data: {
+                type: 'FeatureCollection',
+                features: this.mapVisibleBeacons()
+            }
+        });
+
+        this.map.addSource('hiddenMarkers', {
+            type: 'geojson',
+            cluster: true,
+            clusterMaxZoom: 14,
+            clusterRadius: 50,
+            data: {
+                type: 'FeatureCollection',
+                features: this.mapHiddenBeacons()
+            }
         });
     }
 
     mapVisibleBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
         var troyVisibleBeacons = require('./troy-visible-beacons.json');
         var jugVisibleBeacons = require('./jug-visible-beacons.json');
-        var polarisVisibleBeacons = require('./polaris-shortpath-visible-beacons.json');
-        var visibleBeacons = troyVisibleBeacons.concat(jugVisibleBeacons, polarisVisibleBeacons);
+        var polarisShortVisibleBeacons = require('./polaris-shortpath-visible-beacons.json');
+        var polarisLongVisibleBeacons = require('./polaris-longpath-visible-beacons.json');
+        var visibleBeacons = troyVisibleBeacons.concat(jugVisibleBeacons, polarisShortVisibleBeacons, polarisLongVisibleBeacons);
         return visibleBeacons.map(this.visibleBeacon);
     }
 
@@ -85,8 +95,9 @@ export class AppComponent implements OnInit {
     mapHiddenBeacons = (): GeoJSON.Feature<GeoJSON.Point>[] => {
         var troyHiddenBeacons = require('./troy-hidden-beacons.json');
         var jugHiddenBeacons = require('./jug-hidden-beacons.json');
-        var polarisHiddenBeacons = require('./polaris-shortpath-hidden-beacons.json');
-        var hiddenBeacons = troyHiddenBeacons.concat(jugHiddenBeacons, polarisHiddenBeacons);
+        var polarisShortHiddenBeacons = require('./polaris-shortpath-hidden-beacons.json');
+        var polarisLongHiddenBeacons = require('./polaris-longpath-hidden-beacons.json');
+        var hiddenBeacons = troyHiddenBeacons.concat(jugHiddenBeacons, polarisShortHiddenBeacons, polarisLongHiddenBeacons);
         return hiddenBeacons.map(this.hiddenBeacon);
     }
 
@@ -129,6 +140,16 @@ export class AppComponent implements OnInit {
             paint: {
                 'circle-radius': 10,
                 'circle-color': '#ee1c24'
+            }
+        });
+
+        this.map.addLayer({
+            id: 'hiddenMarkers',
+            source: 'hiddenMarkers',
+            type: 'circle',
+            paint: {
+                'circle-radius': 10,
+                'circle-color': '#241cee'
             }
         });
     }
