@@ -48,7 +48,6 @@ export class AppComponent implements OnInit {
             this.addClusterLayers();
             this.addLocationLayer();
         });
-
         this.map.on('click', (e) => this.onMapClick(e));
         this.map.on('mousemove', (e) => this.onMouseOver(e));
         this.map.on('moveend', (e) => this.onMapMoveEnd(e));
@@ -109,7 +108,6 @@ export class AppComponent implements OnInit {
             properties: {
                 markerSymbol: 'default_marker',
                 type: 'visible',
-                isVisible: true,
                 captured: 0,
                 value: 1
             }
@@ -127,7 +125,6 @@ export class AppComponent implements OnInit {
             properties: {
                 markerSymbol: 'default_marker',
                 type: 'hidden',
-                isVisible: false,
                 captured: 0,
                 value: 1
             }
@@ -168,6 +165,7 @@ export class AppComponent implements OnInit {
                 'circle-color': {
                     property: 'captured',
                     type: 'exponential',
+                    colorSpace: 'hcl',
                     stops: [
                         [0, '#ee1c24'],
                         [1, '#969696']
@@ -245,8 +243,10 @@ export class AppComponent implements OnInit {
         setInterval(() => {
             this.timeSinceUpdate = Math.round((Date.now() - this.lastPositionUpdate) * 0.001);
             // local debug
-            // var mapCenter = this.map.getCenter();
-            // this.updateLocation({coords: { longitude: mapCenter.lng, latitude: mapCenter.lat } });
+            if (!window.ontouchstart && Math.random() > 0.6) {
+                var mapCenter = this.map.getCenter();
+                this.updateLocation({ coords: { longitude: mapCenter.lng, latitude: mapCenter.lat } });
+            }
         }, 1000);
     }
 
@@ -303,6 +303,7 @@ export class AppComponent implements OnInit {
                 this.message = 'You already captured this beacon';
             }
             if (beaconCaptured) {
+                navigator.vibrate(200);
                 anyBeaconCaptured = true;
                 beacon.properties.captured = 1;
             }
