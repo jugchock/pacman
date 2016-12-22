@@ -48,8 +48,8 @@ export class AppComponent implements OnInit {
             this.addLocationLayer();
         });
 
-        this.map.on('click', () => this.onMapClick);
-        this.map.on('mousemove', () => this.onMouseOver);
+        this.map.on('click', (e) => this.onMapClick(e));
+        this.map.on('mousemove', (e) => this.onMouseOver(e));
 
         this.configureDebug();
     }
@@ -281,12 +281,6 @@ export class AppComponent implements OnInit {
         // Use queryRenderedFeatures to get features at a click event's point
         // Use layer option to avoid getting results from other layers
         var features = this.map.queryRenderedFeatures(e.point, { layers: ['beacons'] });
-        // if there are features within the given radius of the click event,
-        // fly to the location of the click event
-        if (features.length) {
-            // Get coordinates from the symbol and center the map on those coordinates
-            this.map.flyTo({center: features[0].geometry.coordinates});
-        }
 
         var feature = features[0];
 
@@ -294,7 +288,7 @@ export class AppComponent implements OnInit {
         // based on the feature found.
         var popup: mapboxgl.Popup = new mapboxgl.Popup()
             .setLngLat(feature.geometry.coordinates)
-            .setHTML(feature.properties.title)
+            .setHTML(JSON.stringify(feature.properties))
             .addTo(this.map);
     }
 
