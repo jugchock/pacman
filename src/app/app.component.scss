@@ -6,16 +6,16 @@ body {
 }
 
 #info {
-    display: block;
-    position: relative;
-    margin: 0 auto;
-    padding: 10px;
+    background: #fff;
     border: none;
     border-radius: 3px;
-    font-size: 12px;
-    text-align: center;
     color: #222;
-    background: #fff;
+    display: block;
+    font-size: 12px;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative;
+    text-align: center;
 }
 
 html,
@@ -29,8 +29,8 @@ body,
 }
 
 .pacman li {
-    padding: 10px 0;
     list-style: none;
+    padding: 10px 0;
 }
 
 .pacman h1 {
@@ -54,8 +54,8 @@ body,
 
 .pacman #map {
     height: calc(100% - 207px);
-    width: 100%;
     top: 72px;
+    width: 100%;
 }
 
 .pacman .layout-padding {
@@ -63,20 +63,20 @@ body,
 }
 
 .pacman .header {
-    position: absolute;
-    top: 0;
     background: black;
     color: white;
     height: 72px;
+    position: absolute;
+    top: 0;
     width: 100%;
 }
 
 .pacman footer {
-    position: absolute;
-    bottom: 0;
     background: black;
+    bottom: 0;
     color: white;
     height: 135px;
+    position: absolute;
     width: 100%;
 }
 
@@ -94,6 +94,8 @@ body,
     }
 }
 
+
+//HELPERS
 .flex-grid {
     display: flex;
 }
