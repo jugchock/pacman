@@ -10,7 +10,7 @@ declare const mapboxgl;
 })
 export class AppComponent implements OnInit {
     map: mapboxgl.Map;
-    beaconMaxProximity: number = 50;
+    beaconMaxProximity: number = 10;
     beaconResetSeconds: number = 3600;
     currentLng: number;
     currentLat: number;
@@ -32,8 +32,8 @@ export class AppComponent implements OnInit {
         this.map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/outdoors-v9',
-            center: [-93.7604785, 44.8958712],
-            zoom: 9
+            center: this.getSavedMapCenter(),
+            zoom: localStorage.getItem('mapZoom') || 9
         });
 
         this.map.addControl(new mapboxgl.NavigationControl());
@@ -50,8 +50,21 @@ export class AppComponent implements OnInit {
 
         this.map.on('click', (e) => this.onMapClick(e));
         this.map.on('mousemove', (e) => this.onMouseOver(e));
+        this.map.on('moveend', (e) => this.onMapMoveEnd(e));
 
         this.configureDebug();
+    }
+
+    getSavedMapCenter() {
+        var center;
+        var centerEncoded = localStorage.getItem('mapCenter');
+        if (centerEncoded) {
+            center = _.attempt(JSON.parse(centerEncoded));
+        }
+        if (!center || _.isError(center)) {
+            center = [-90, 45];
+        }
+        return center;
     }
 
     addBeaconSource() {
@@ -96,6 +109,7 @@ export class AppComponent implements OnInit {
                 markerSymbol: 'default_marker',
                 type: 'visible',
                 isVisible: true,
+                captured: 0,
                 value: 1
             }
         };
@@ -113,6 +127,7 @@ export class AppComponent implements OnInit {
                 markerSymbol: 'default_marker',
                 type: 'hidden',
                 isVisible: false,
+                captured: 0,
                 value: 1
             }
         };
@@ -141,12 +156,20 @@ export class AppComponent implements OnInit {
             source: 'beacons',
             type: 'circle',
             paint: {
-                'circle-radius': 10,
-                'circle-color': {
+                'circle-radius': {
                     property: 'type',
+                    type: 'categorical',
                     stops: [
-                        ['visible', '#ee1c24'],
-                        ['hidden', '#241cee']
+                        ['visible', 10],
+                        ['hidden', 5]
+                    ]
+                },
+                'circle-color': {
+                    property: 'captured',
+                    type: 'exponential',
+                    stops: [
+                        [0, '#ee1c24'],
+                        [1, '#333333']
                     ]
                 }
             }
@@ -254,27 +277,42 @@ export class AppComponent implements OnInit {
     checkNearbyBeacons(lng, lat) {
         if (!this.beacons) { return; }
         // TODO: optimize this by narrowing beacons list down to likely candidates before calculating distance
-        // or better yet, hard-code min lng and lat diffirences to filter by
+        // or better yet, hard-code min lng and lat differences to filter by
         var nearbyBeacons = _.filter(this.beacons, (beacon) => {
             let dist = this.geoService.pointsToRadians(beacon.geometry.coordinates[0], beacon.geometry.coordinates[1], lng, lat);
             dist = this.geoService.radiansToMeters(dist);
             return dist <= this.beaconMaxProximity;
         });
+        let anyBeaconCaptured = false;
         nearbyBeacons.forEach((beacon) => {
             let oldBeacon = _.find(this.beaconsCaptured, { beacon: { id: beacon.id } });
+            let beaconCaptured = false;
             if (!oldBeacon) {
                 this.pointsTotal++;
                 this.beaconsCaptured.push({
                     beacon,
                     time: Date.now()
                 });
+                beaconCaptured = true;
             } else if (oldBeacon.time < Date.now() - this.beaconResetSeconds * 1000) {
                 this.pointsTotal++;
                 oldBeacon.time = Date.now();
+                beaconCaptured = true;
             } else {
                 this.message = 'You already captured this beacon';
             }
+            if (beaconCaptured) {
+                anyBeaconCaptured = true;
+                beacon.properties.captured = 1;
+            }
         });
+        if (anyBeaconCaptured) {
+            let beaconSource = (this.map.getSource('beacons') as mapboxgl.GeoJSONSource);
+            beaconSource.setData({
+                type: 'FeatureCollection',
+                features: this.beacons
+            });
+        }
     }
 
     onMapClick(e) {
@@ -298,5 +336,10 @@ export class AppComponent implements OnInit {
         if (!this.map.loaded()) { return; }
         var features = this.map.queryRenderedFeatures(e.point, { layers: ['beacons'] });
         this.map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+    }
+
+    onMapMoveEnd(e) {
+        localStorage.setItem('mapZoom', this.map.getZoom().toString());
+        localStorage.setItem('mapCenter', JSON.stringify(this.map.getCenter()));
     }
 }
