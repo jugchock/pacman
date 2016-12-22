@@ -1,5 +1,6 @@
 body {
-  background: #e8e8e8;
+  background: black;
+  color: white;
   font-family: 'Raleway', sans-serif;
   margin: 0;
   padding: 0;
@@ -24,6 +25,11 @@ html,
 body,
 .pacman {
   height: 100% !important;
+}
+
+.pacman {
+  background: black;
+  color: white;
 }
 
 .pacman a {

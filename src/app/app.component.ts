@@ -33,7 +33,8 @@ export class AppComponent implements OnInit {
             container: 'map',
             style: 'mapbox://styles/mapbox/outdoors-v9',
             center: this.getSavedMapCenter(),
-            zoom: localStorage.getItem('mapZoom') || 9
+            zoom: localStorage.getItem('mapZoom') || 9,
+            pitch: 50
         });
 
         this.map.addControl(new mapboxgl.NavigationControl());
@@ -167,7 +168,7 @@ export class AppComponent implements OnInit {
                     colorSpace: 'hcl',
                     stops: [
                         [0, '#ee1c24'],
-                        [1, '#333333']
+                        [1, '#969696']
                     ]
                 }
             }
