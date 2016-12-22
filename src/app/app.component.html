@@ -1,13 +1,17 @@
   <div class="pacman">
-      <div class="header">
-          <div class="header-container layout-padding">
-              <h1>Trail Pacman</h1>
+
+      <div class="flex-grid text-center layout-padding">
+          <div class="col">
+              <h1>Trail Munchers</h1>
           </div>
       </div>
 
       <div id="map">
-          <div class="re-center">
+          <div class="btn-re-center">
               <img src="assets/images/btn-center.png" alt="center">
+          </div>
+          <div class="proximity">
+              <input type="number" name="proximity" min="1" max="50" value="{{beaconMaxProximity}}">
           </div>
       </div>
 
