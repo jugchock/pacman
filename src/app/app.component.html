@@ -23,7 +23,7 @@
       </div>
 
       <footer>
-          <div class="footer-container layout-padding">
+          <div class="footer-container">
 
               <div class="flex-grid text-center">
                   <!--<div class="col">-->
@@ -37,7 +37,7 @@
                   <div class="col">
                       <h1>{{pointsTotal}}</h1>
                       <div>Total</div>
-                      <div *ngIf="pointsTotal > 9">You just earned 5% off at www.trailmunchers.com</div>
+                      <div class="layout-padding" *ngIf="pointsTotal > 2">You just earned 10% off at www.trailmunchers.com</div>
                   </div>
               </div>
 
