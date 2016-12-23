@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     defaultCenter: number[] = [-90, 45];
     defaultPitch: number = 50;
     beaconMaxProximity: number = 20;
-    beaconResetSeconds: number = 60;
+    beaconResetSeconds: number = 600;
     currentLng: number;
     currentLat: number;
     points: number = 0;
@@ -199,19 +199,26 @@ export class AppComponent implements OnInit {
                 }
             }
         });
+
+        this.map.addLayer({
+            id: 'beaconLabel',
+            source: 'beacons',
+            type: 'symbol',
+            layout: {
+                'text-field': '{beaconReset}',
+                'text-size': 10,
+                'text-anchor': 'bottom-left',
+                'text-offset': [0.5, -0.5]
+            },
+            paint: {
+                'text-halo-color': 'rgba(200, 200, 200, 0.4)',
+                'text-halo-width': 1,
+                'text-halo-blur': 2
+            }
+        });
     }
 
     addClusterLayers() {
-        this.map.addLayer({
-            id: 'unclustered-points',
-            type: 'symbol',
-            source: 'beacons',
-            filter: ['!has', 'point_count'],
-            layout: {
-                'icon-image': 'marker-15'
-            }
-        });
-
         // Display the data in three layers, each filtered to a range of
         // count values. Each range gets a different fill color.
         var layers = [
