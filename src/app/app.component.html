@@ -50,34 +50,6 @@
           </div>
       </footer>
 
-      <style>
-          .side-bar {
-              position: absolute;
-              top: 69px;
-              background: white;
-              color: black;
-              height: calc(100% - 205px);
-              margin: 0;
-              width: 300px;
-          }
-
-          .side-bar .top {
-              background: grey;
-              color: white;
-          }
-
-          .side-bar .close {
-              cursor: pointer;
-              position: relative;
-              left: 281px;
-              background: white;
-              color: black;
-              transform: rotate(90deg);
-              top: -111px;
-              width: 55px;
-          }
-      </style>
-
       <div class="side-bar" [ngClass]="displayText">
 
           <div class="inner">
@@ -98,6 +70,6 @@
 
       </div>
 
-      <div style="position: absolute; top: 20px; left: 20px; cursor: pointer;" class="layout-padding" (click)="toggle()">TOOLS</div>
+      <div class="hamburger-menu layout-padding" (click)="toggle()">&#9776;</div>
 
   </div>
