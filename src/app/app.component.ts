@@ -10,8 +10,11 @@ declare const mapboxgl;
 })
 export class AppComponent implements OnInit {
     map: mapboxgl.Map;
+    defaultZoom: number = 15;
+    defaultCenter: number[] = [-90, 45];
+    defaultPitch: number = 50;
     beaconMaxProximity: number = 20;
-    beaconResetSeconds: number = 600;
+    beaconResetSeconds: number = 60;
     currentLng: number;
     currentLat: number;
     points: number = 0;
@@ -22,6 +25,8 @@ export class AppComponent implements OnInit {
     message: string;
     visible: boolean;
     displayText: string;
+    private userControlledPan = false;
+    private userControlledZoom = false;
 
     // debug
     timeSinceUpdate: number;
@@ -43,8 +48,8 @@ export class AppComponent implements OnInit {
             container: 'map',
             style: 'mapbox://styles/mapbox/outdoors-v9',
             center: this.getSavedMapCenter(),
-            zoom: localStorage.getItem('mapZoom') || 9,
-            pitch: 50
+            zoom: localStorage.getItem('mapZoom') || this.defaultZoom,
+            pitch: this.defaultPitch
         });
 
         this.map.addControl(new mapboxgl.NavigationControl());
@@ -72,7 +77,7 @@ export class AppComponent implements OnInit {
             center = _.attempt(JSON.parse, centerEncoded);
         }
         if (!center || _.isError(center)) {
-            center = [-90, 45];
+            center = this.defaultCenter;
         }
         return center;
     }
@@ -274,7 +279,10 @@ export class AppComponent implements OnInit {
     updateLocation(position) {
         let lng = this.currentLng = position.coords.longitude;
         let lat = this.currentLat = position.coords.latitude;
-        this.map.flyTo({ center: [lng, lat] });
+        if (!this.userControlledPan) {
+            let zoom = this.userControlledZoom ? this.map.getZoom() : this.defaultZoom;
+            this.map.flyTo({ center: [lng, lat], zoom });
+        }
         this.updateLocationMarker(lng, lat);
         this.checkNearbyBeacons(lng, lat);
         this.updateBeaconStatus();
@@ -336,6 +344,7 @@ export class AppComponent implements OnInit {
         var features = this.map.queryRenderedFeatures(e.point, { layers: ['beacons'] });
 
         var feature = features[0];
+        if (!feature) { return; }
 
         // Populate the popup and set its coordinates
         // based on the feature found.
@@ -354,7 +363,8 @@ export class AppComponent implements OnInit {
     }
 
     onMapMoveEnd(e) {
-        localStorage.setItem('mapZoom', this.map.getZoom().toString());
+        var zoom = this.map.getZoom();
+        localStorage.setItem('mapZoom', zoom.toString());
         localStorage.setItem('mapCenter', JSON.stringify(this.map.getCenter()));
     }
 }
