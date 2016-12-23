@@ -11,7 +11,7 @@ declare const mapboxgl;
 export class AppComponent implements OnInit {
     map: mapboxgl.Map;
     beaconMaxProximity: number = 20;
-    beaconResetSeconds: number = 3600;
+    beaconResetSeconds: number = 600;
     currentLng: number;
     currentLat: number;
     points: number = 0;
@@ -102,7 +102,8 @@ export class AppComponent implements OnInit {
             0,
             Math.round(this.beaconResetSeconds - Math.random() * this.beaconResetSeconds * 2));
         return {
-            id: `${coords[0]}|${coords[1]}`,
+            // id: `${coords[0]}|${coords[1]}`,
+            id: coords[0] + '|' + coords[1],
             type: 'Feature',
             geometry: {
                 type: 'Point',
@@ -123,7 +124,8 @@ export class AppComponent implements OnInit {
             0,
             Math.round(this.beaconResetSeconds - Math.random() * this.beaconResetSeconds * 2));
         return {
-            id: `${coords[0]}|${coords[1]}`,
+            // id: `${coords[0]}|${coords[1]}`,
+            id: coords[0] + '|' + coords[1],
             type: 'Feature',
             geometry: {
                 type: 'Point',
@@ -295,26 +297,12 @@ export class AppComponent implements OnInit {
             return dist <= this.beaconMaxProximity;
         });
         nearbyBeacons.forEach((beacon) => {
-            let oldBeacon = _.find(this.beaconsCaptured, { beacon: { id: beacon.id } });
-            let beaconCaptured = false;
-            if (!oldBeacon) {
-                this.pointsTotal++;
-                this.beaconsCaptured.push({
-                    beacon,
-                    time: Date.now()
-                });
-                beaconCaptured = true;
-            } else if (oldBeacon.time < Date.now() - this.beaconResetSeconds * 1000) {
-                this.pointsTotal++;
-                oldBeacon.time = Date.now();
-                beaconCaptured = true;
-            } else {
-                this.message = 'You already captured this beacon';
-            }
-            if (beaconCaptured) {
+            if (beacon.properties.beaconReset <= 0) {
                 navigator.vibrate(200);
+                this.pointsTotal += beacon.properties.value;
                 beacon.properties.captureTimestamp = Date.now();
                 beacon.properties.beaconReset = this.beaconResetSeconds;
+                this.beaconsCaptured.push(_.clone(beacon));
             }
         });
     }
