@@ -39,7 +39,7 @@ export class BeaconService {
     createVisibleBeacon(coords): GeoJSON.Feature<GeoJSON.Point> {
         var beaconReset = Math.max(
             0,
-            Math.round(this.configService.beaconResetSeconds - Math.random() * this.configService.beaconResetSeconds * 2));
+            Math.round(this.configService.beaconResetSeconds - Math.random() * this.configService.beaconResetSeconds * 4));
         return {
             // id: `${coords[0]}|${coords[1]}`,
             id: coords[0] + '|' + coords[1],

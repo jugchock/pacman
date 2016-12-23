@@ -85,18 +85,27 @@ export class AppComponent implements OnInit {
         setInterval(() => {
             this.timeSinceUpdate = Math.round((Date.now() - this.lastPositionUpdate) * 0.001);
             // local debug
-            if (!window.ontouchstart && Math.random() > 0.6) {
+            if (!this.isTouch() && Math.random() > 0.6) {
                 var mapCenter = this.map.getCenter();
                 this.onLocationUpdate({ coords: { longitude: mapCenter.lng, latitude: mapCenter.lat } });
             }
         }, 1000);
     }
 
+    isTouch() {
+        try {
+            document.createEvent('TouchEvent');
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
     onLocationUpdate(position) {
         let lng = this.currentLng = position.coords.longitude;
         let lat = this.currentLat = position.coords.latitude;
         if (this.followMe) {
-            this.map.flyTo({ center: [lng, lat], zoom: this.configService.defaultZoom });
+            this.map.flyTo({ center: [lng, lat], zoom: this.map.getZoom() });
         }
         this.locationService.updateLocationMarker(this.map, lng, lat);
         this.checkNearbyBeacons(lng, lat);
