@@ -157,6 +157,7 @@ body,
 //SIDEBAR
 .side-bar {
   background: white;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12);
   color: black;
   height: calc(100% - 205px);
   margin: 0;
@@ -172,6 +173,11 @@ body,
 
 .side-bar .close {
   background: white;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
   color: black;
   cursor: pointer;
   left: 281px;
