@@ -1,11 +1,26 @@
+import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { ConfigService } from '../shared';
 
 @Injectable()
 export class BeaconService {
-    constructor(private configService: ConfigService) { }
+    beacons: GeoJSON.Feature<GeoJSON.Point>[];
+    beaconsCaptured;
 
-    getBeacons(): GeoJSON.Feature<GeoJSON.Point>[] {
+    constructor(private configService: ConfigService) {
+        this.getStoredBeaconsCaptured();
+    }
+
+    getStoredBeaconsCaptured() {
+        var beacons;
+        var beaconsEncoded = localStorage.getItem('beaconsCaptured');
+        if (beaconsEncoded) {
+            beacons = _.attempt(JSON.parse, beaconsEncoded);
+        }
+        this.beaconsCaptured = beacons && !_.isError(beacons) ? beacons : [];
+    }
+
+    getBeacons() {
         var troyVisibleBeacons = require('./troy-visible-beacons.json');
         var jugVisibleBeacons = require('./jug-visible-beacons.json');
         var polarisShortVisibleBeacons = require('./polaris-shortpath-visible-beacons.json');
@@ -18,7 +33,7 @@ export class BeaconService {
         var polarisLongHiddenBeacons = require('./polaris-longpath-hidden-beacons.json');
         var hiddenBeacons = troyHiddenBeacons.concat(jugHiddenBeacons, polarisShortHiddenBeacons, polarisLongHiddenBeacons)
             .map((coords) => this.createHiddenBeacon(coords));
-        return visibleBeacons.concat(hiddenBeacons);
+        this.beacons = visibleBeacons.concat(hiddenBeacons);
     }
 
     createVisibleBeacon(coords): GeoJSON.Feature<GeoJSON.Point> {
@@ -63,5 +78,22 @@ export class BeaconService {
                 value: 1
             }
         };
+    }
+
+    addCapturedBeacon(beacon) {
+        this.beaconsCaptured.push({
+            id: beacon.id,
+            timestamp: Date.now(),
+            value: beacon.properties.value
+        });
+        localStorage.setItem('beaconsCaptured', JSON.stringify(this.beaconsCaptured));
+    }
+
+    calculatePoints() {
+        var points = 0;
+        this.beaconsCaptured.forEach((beacon) => {
+            points += beacon.value;
+        });
+        return points;
     }
 }
