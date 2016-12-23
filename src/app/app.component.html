@@ -37,7 +37,13 @@
                   <div class="col">
                       <h1>{{pointsTotal}}</h1>
                       <div>Total</div>
-                      <div class="layout-padding" *ngIf="pointsTotal > 2">You just earned 10% off at www.trailmunchers.com</div>
+                      <div class="layout-padding" *ngIf="pointsTotal > 9">You just earned
+                          <span *ngIf="pointsTotal > 9 && pointsTotal < 15">5%</span>
+                          <span *ngIf="pointsTotal > 14 && pointsTotal < 20">10%</span>
+                          <span *ngIf="pointsTotal > 19">15%</span>off at www.trailmunchers.com | Use code
+                          <span *ngIf="pointsTotal > 9 && pointsTotal < 15">POL-5-OFF</span>
+                          <span *ngIf="pointsTotal > 14 && pointsTotal < 20">POL-OFF-10</span>
+                          <span *ngIf="pointsTotal > 19">15-POL-OFF</span></div>
                   </div>
               </div>
 
