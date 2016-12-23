@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Component, OnInit } from '@angular/core';
-import { GeoService } from './shared';
+import { BeaconLayerService, GeoService, LocationService } from './shared';
 declare const mapboxgl;
 
 @Component({
@@ -14,7 +14,7 @@ export class AppComponent implements OnInit {
     defaultCenter: number[] = [-90, 45];
     defaultPitch: number = 50;
     beaconMaxProximity: number = 20;
-    beaconResetSeconds: number = 60;
+    beaconResetSeconds: number = 600;
     currentLng: number;
     currentLat: number;
     points: number = 0;
@@ -32,7 +32,10 @@ export class AppComponent implements OnInit {
     timeSinceUpdate: number;
     lastPositionUpdate: number = Date.now();
 
-    constructor(private geoService: GeoService) {
+    constructor(private mapLayerService: BeaconLayerService,
+        private geoService: GeoService,
+        private locationService: LocationService)
+    {
         this.displaySidebar = 'hide-class';
         this.visible = false;
     }
@@ -54,45 +57,22 @@ export class AppComponent implements OnInit {
 
         this.map.addControl(new mapboxgl.NavigationControl());
 
+        this.beacons = this.getBeacons();
+
         var watchID = navigator.geolocation.watchPosition((position) => this.updateLocation(position), null, { enableHighAccuracy: true });
 
         this.map.on('style.load', () => {
-            this.addBeaconSource();
-            this.addLocationSource();
-            this.addBeaconLayers();
-            this.addClusterLayers();
-            this.addLocationLayer();
+            this.mapLayerService.addBeaconSource(this.map, this.beacons);
+            this.locationService.addLocationSource(this.map);
+            this.mapLayerService.addBeaconLayers(this.map);
+            this.mapLayerService.addClusterLayers(this.map);
+            this.locationService.addLocationLayer(this.map);
         });
         this.map.on('click', (e) => this.onMapClick(e));
         this.map.on('mousemove', (e) => this.onMouseOver(e));
         this.map.on('moveend', (e) => this.onMapMoveEnd(e));
 
         this.configureDebug();
-    }
-
-    getSavedMapCenter() {
-        var center;
-        var centerEncoded = localStorage.getItem('mapCenter');
-        if (centerEncoded) {
-            center = _.attempt(JSON.parse, centerEncoded);
-        }
-        if (!center || _.isError(center)) {
-            center = this.defaultCenter;
-        }
-        return center;
-    }
-
-    addBeaconSource() {
-        this.map.addSource('beacons', {
-            type: 'geojson',
-            cluster: true,
-            clusterMaxZoom: 14, // Max zoom to cluster points on
-            clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
-            data: {
-                type: 'FeatureCollection',
-                features: this.getBeacons()
-            }
-        });
     }
 
     getBeacons(): GeoJSON.Feature<GeoJSON.Point>[] {
@@ -108,8 +88,7 @@ export class AppComponent implements OnInit {
         var polarisLongHiddenBeacons = require('./polaris-longpath-hidden-beacons.json');
         var hiddenBeacons = troyHiddenBeacons.concat(jugHiddenBeacons, polarisShortHiddenBeacons, polarisLongHiddenBeacons)
             .map((coords) => this.createHiddenBeacon(coords));
-        this.beacons = visibleBeacons.concat(hiddenBeacons);
-        return this.beacons;
+        return visibleBeacons.concat(hiddenBeacons);
     }
 
     createVisibleBeacon(coords): GeoJSON.Feature<GeoJSON.Point> {
@@ -156,113 +135,16 @@ export class AppComponent implements OnInit {
         };
     }
 
-    addLocationSource() {
-        var mapCenter = this.map.getCenter();
-        var data: GeoJSON.Feature<GeoJSON.Point> = {
-            type: 'Feature',
-            geometry: {
-                type: 'Point',
-                coordinates: [mapCenter.lng, mapCenter.lat]
-            },
-            properties: {}
-        };
-
-        this.map.addSource('location', {
-            type: 'geojson',
-            data
-        });
-    }
-
-    addBeaconLayers() {
-        this.map.addLayer({
-            id: 'beacons',
-            source: 'beacons',
-            type: 'circle',
-            paint: {
-                'circle-radius': {
-                    property: 'type',
-                    type: 'categorical',
-                    stops: [
-                        ['visible', 10],
-                        ['hidden', 5]
-                    ]
-                },
-                'circle-color': {
-                    property: 'beaconReset',
-                    type: 'exponential',
-                    colorSpace: 'hcl',
-                    stops: [
-                        [0, '#ee1c24'],
-                        [1, '#990008'],
-                        [3600, '#969696']
-                    ]
-                }
-            }
-        });
-    }
-
-    addClusterLayers() {
-        this.map.addLayer({
-            id: 'unclustered-points',
-            type: 'symbol',
-            source: 'beacons',
-            filter: ['!has', 'point_count'],
-            layout: {
-                'icon-image': 'marker-15'
-            }
-        });
-
-        // Display the data in three layers, each filtered to a range of
-        // count values. Each range gets a different fill color.
-        var layers = [
-            [150, '#f28cb1'],
-            [20, '#f1f075'],
-            [0, '#39c237']
-        ];
-
-        layers.forEach((layer, i) => {
-            this.map.addLayer({
-                id: 'cluster-' + i,
-                type: 'circle',
-                source: 'beacons',
-                paint: {
-                    'circle-color': layer[1],
-                    'circle-radius': 12
-                },
-                filter: i === 0 ?
-                    ['>=', 'point_count', layer[0]] :
-                    ['all',
-                        ['>=', 'point_count', layer[0]],
-                        ['<', 'point_count', layers[i - 1][0]]]
-            });
-        });
-
-        // Add a layer for the clusters' count labels
-        this.map.addLayer({
-            id: 'cluster-count',
-            type: 'symbol',
-            source: 'beacons',
-            layout: {
-                'text-field': '{point_count}',
-                'text-font': [
-                    'DIN Offc Pro Medium',
-                    'Arial Unicode MS Bold'
-                ],
-                'text-size': 14
-            }
-        });
-    }
-
-    addLocationLayer() {
-        this.map.addLayer({
-            id: 'location',
-            type: 'circle',
-            source: 'location',
-            paint: {
-                'circle-radius': 10,
-                'circle-color': '#ff9900'
-            }
-        });
+    getSavedMapCenter() {
+        var center;
+        var centerEncoded = localStorage.getItem('mapCenter');
+        if (centerEncoded) {
+            center = _.attempt(JSON.parse, centerEncoded);
+        }
+        if (!center || _.isError(center)) {
+            center = this.defaultCenter;
+        }
+        return center;
     }
 
     configureDebug() {
