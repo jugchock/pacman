@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { GeoService } from './shared';
+import { BeaconLayerService, GeoService, LocationService } from './shared';
 
 import { AppComponent } from './app.component';
 
@@ -16,7 +16,7 @@ import { AppComponent } from './app.component';
     FormsModule,
     HttpModule
   ],
-  providers: [GeoService],
+  providers: [BeaconLayerService, GeoService, LocationService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
