@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     beaconsCaptured = [];
     message: string;
     visible: boolean;
-    displayText: string;
+    displaySidebar: string;
     private userControlledPan = false;
     private userControlledZoom = false;
 
@@ -33,13 +33,13 @@ export class AppComponent implements OnInit {
     lastPositionUpdate: number = Date.now();
 
     constructor(private geoService: GeoService) {
-        this.displayText = 'hide-class';
+        this.displaySidebar = 'hide-class';
         this.visible = false;
     }
 
-    toggle() {
+    toggleSidebar() {
         this.visible = !this.visible;
-        this.displayText = this.visible ? 'show-class' : 'hide-class';
+        this.displaySidebar = this.visible ? 'show-class' : 'hide-class';
     }
 
     ngOnInit() {
