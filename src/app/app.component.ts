@@ -10,7 +10,7 @@ declare const mapboxgl;
 })
 export class AppComponent implements OnInit {
     map: mapboxgl.Map;
-    beaconMaxProximity: number = 10;
+    beaconMaxProximity: number = 20;
     beaconResetSeconds: number = 3600;
     currentLng: number;
     currentLat: number;
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
         var center;
         var centerEncoded = localStorage.getItem('mapCenter');
         if (centerEncoded) {
-            center = _.attempt(JSON.parse(centerEncoded));
+            center = _.attempt(JSON.parse, centerEncoded);
         }
         if (!center || _.isError(center)) {
             center = [-90, 45];
@@ -86,18 +86,21 @@ export class AppComponent implements OnInit {
         var polarisShortVisibleBeacons = require('./polaris-shortpath-visible-beacons.json');
         var polarisLongVisibleBeacons = require('./polaris-longpath-visible-beacons.json');
         var visibleBeacons = troyVisibleBeacons.concat(jugVisibleBeacons, polarisShortVisibleBeacons, polarisLongVisibleBeacons)
-            .map(this.createVisibleBeacon);
+            .map((coords) => this.createVisibleBeacon(coords));
         var troyHiddenBeacons = require('./troy-hidden-beacons.json');
         var jugHiddenBeacons = require('./jug-hidden-beacons.json');
         var polarisShortHiddenBeacons = require('./polaris-shortpath-hidden-beacons.json');
         var polarisLongHiddenBeacons = require('./polaris-longpath-hidden-beacons.json');
         var hiddenBeacons = troyHiddenBeacons.concat(jugHiddenBeacons, polarisShortHiddenBeacons, polarisLongHiddenBeacons)
-            .map(this.createHiddenBeacon);
+            .map((coords) => this.createHiddenBeacon(coords));
         this.beacons = visibleBeacons.concat(hiddenBeacons);
         return this.beacons;
     }
 
     createVisibleBeacon(coords): GeoJSON.Feature<GeoJSON.Point> {
+        var beaconReset = Math.max(
+            0,
+            Math.round(this.beaconResetSeconds - Math.random() * this.beaconResetSeconds * 2));
         return {
             id: `${coords[0]}|${coords[1]}`,
             type: 'Feature',
@@ -108,13 +111,17 @@ export class AppComponent implements OnInit {
             properties: {
                 markerSymbol: 'default_marker',
                 type: 'visible',
-                captured: 0,
+                captureTimestamp: Date.now() - (this.beaconResetSeconds - beaconReset) * 1000,
+                beaconReset,
                 value: 1
             }
         };
     }
 
     createHiddenBeacon(coords): GeoJSON.Feature<GeoJSON.Point> {
+        var beaconReset = Math.max(
+            0,
+            Math.round(this.beaconResetSeconds - Math.random() * this.beaconResetSeconds * 2));
         return {
             id: `${coords[0]}|${coords[1]}`,
             type: 'Feature',
@@ -125,7 +132,8 @@ export class AppComponent implements OnInit {
             properties: {
                 markerSymbol: 'default_marker',
                 type: 'hidden',
-                captured: 0,
+                captureTimestamp: Date.now() - (this.beaconResetSeconds - beaconReset) * 1000,
+                beaconReset,
                 value: 1
             }
         };
@@ -163,12 +171,13 @@ export class AppComponent implements OnInit {
                     ]
                 },
                 'circle-color': {
-                    property: 'captured',
+                    property: 'beaconReset',
                     type: 'exponential',
                     colorSpace: 'hcl',
                     stops: [
                         [0, '#ee1c24'],
-                        [1, '#969696']
+                        [1, '#990008'],
+                        [3600, '#969696']
                     ]
                 }
             }
@@ -256,6 +265,7 @@ export class AppComponent implements OnInit {
         this.map.flyTo({ center: [lng, lat] });
         this.updateLocationMarker(lng, lat);
         this.checkNearbyBeacons(lng, lat);
+        this.updateBeaconStatus();
 
         // debug
         this.lastPositionUpdate = Date.now();
@@ -284,7 +294,6 @@ export class AppComponent implements OnInit {
             dist = this.geoService.radiansToMeters(dist);
             return dist <= this.beaconMaxProximity;
         });
-        let anyBeaconCaptured = false;
         nearbyBeacons.forEach((beacon) => {
             let oldBeacon = _.find(this.beaconsCaptured, { beacon: { id: beacon.id } });
             let beaconCaptured = false;
@@ -304,17 +313,23 @@ export class AppComponent implements OnInit {
             }
             if (beaconCaptured) {
                 navigator.vibrate(200);
-                anyBeaconCaptured = true;
-                beacon.properties.captured = 1;
+                beacon.properties.captureTimestamp = Date.now();
+                beacon.properties.beaconReset = this.beaconResetSeconds;
             }
         });
-        if (anyBeaconCaptured) {
-            let beaconSource = (this.map.getSource('beacons') as mapboxgl.GeoJSONSource);
-            beaconSource.setData({
-                type: 'FeatureCollection',
-                features: this.beacons
-            });
-        }
+    }
+
+    updateBeaconStatus() {
+        if (!this.beacons) { return; }
+        this.beacons.forEach((beacon) => {
+            let timeLapsed = Math.round((Date.now() - beacon.properties.captureTimestamp) * 0.001);
+            beacon.properties.beaconReset = Math.max(0, this.beaconResetSeconds - timeLapsed);
+        });
+        let beaconSource = (this.map.getSource('beacons') as mapboxgl.GeoJSONSource);
+        beaconSource.setData({
+            type: 'FeatureCollection',
+            features: this.beacons
+        });
     }
 
     onMapClick(e) {
