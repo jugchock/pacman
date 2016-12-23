@@ -30,4 +30,18 @@ export class LocationService {
             }
         });
     }
+
+    updateLocationMarker(map, lng, lat) {
+        let locationSource: mapboxgl.GeoJSONSource = (map.getSource('location') as mapboxgl.GeoJSONSource);
+        if (locationSource) {
+            locationSource.setData({
+                type: 'Feature',
+                geometry: {
+                    type: 'Point',
+                    coordinates: [lng, lat]
+                },
+                properties: {}
+            });
+        }
+    }
 }
