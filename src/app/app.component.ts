@@ -20,12 +20,22 @@ export class AppComponent implements OnInit {
     beacons: GeoJSON.Feature<GeoJSON.Point>[];
     beaconsCaptured = [];
     message: string;
+    visible: boolean;
+    displayText: string;
 
     // debug
     timeSinceUpdate: number;
     lastPositionUpdate: number = Date.now();
 
-    constructor(private geoService: GeoService) {}
+    constructor(private geoService: GeoService) {
+        this.displayText = 'hide-class';
+        this.visible = false;
+    }
+
+    toggle() {
+        this.visible = !this.visible;
+        this.displayText = this.visible ? 'show-class' : 'hide-class';
+    }
 
     ngOnInit() {
         mapboxgl.accessToken = 'pk.eyJ1IjoicG9sYXJpcy1yaWRlcngiLCJhIjoiWExuREx5ayJ9.qK0_9TwlruP7fRC1hASJAA';
