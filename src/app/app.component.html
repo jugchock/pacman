@@ -49,4 +49,52 @@
 
           </div>
       </footer>
+
+      <style>
+          .side-bar {
+              display: none;
+              position: absolute;
+              top: 69px;
+              background: white;
+              color: black;
+              height: calc(100% - 205px);
+              margin: 0;
+              width: 300px;
+          }
+
+          .side-bar .top {
+              background: grey;
+              color: white;
+          }
+
+          .side-bar .close {
+              position: relative;
+              left: 239px;
+              background: white;
+              color: black;
+              transform: rotate(90deg);
+              top: -69px;
+              width: 140px;
+          }
+      </style>
+
+      <div class="side-bar">
+
+          <div class="inner">
+              <div class="top layout-padding">
+                  <h1>Tool Box</h1>
+              </div>
+
+              <div class="middle layout-padding">
+                  <ul>
+                      <li>Add Beacon</li>
+                      <li>Update Beacon</li>
+                      <li>Delete Beacon</li>
+                  </ul>
+              </div>
+          </div>
+
+          <div class="close layout-padding" (click)="toggle()">CLOSE TOOL BOX</div>
+
+      </div>
   </div>
