@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
     pointsTotal: number = 0;
     message: string;
     visible: boolean;
-    displayText: string;
+    displaySidebar: string;
     private userControlledPan = false;
     private userControlledZoom = false;
 
@@ -32,13 +32,13 @@ export class AppComponent implements OnInit {
         private geoService: GeoService,
         private locationService: LocationService
     ) {
-        this.displayText = 'hide-class';
+        this.displaySidebar = 'hide-class';
         this.visible = false;
     }
 
-    toggle() {
+    toggleSidebar() {
         this.visible = !this.visible;
-        this.displayText = this.visible ? 'show-class' : 'hide-class';
+        this.displaySidebar = this.visible ? 'show-class' : 'hide-class';
     }
 
     ngOnInit() {

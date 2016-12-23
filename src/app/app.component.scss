@@ -100,14 +100,20 @@ body,
   padding: 0;
 }
 
-.pacman .btn-re-center {
+.pacman .btn-re-center-on {
+  background: url(assets/images/btn-center-on.png) no-repeat;
+  border-radius: 5px;
+  height: 27px;
   position: absolute;
-  right: 12px;
+  right: 11px;
   top: 110px;
+  width: 27px;
   z-index: 1;
-  img {
-    border-radius: 5px;
-  }
+}
+
+.pacman .btn-re-center-off {
+  background: url(assets/images/btn-center-off.png) no-repeat;
+
 }
 
 .pacman .proximity {
