@@ -148,12 +148,12 @@ body,
 
 //SIDEBAR
 .side-bar {
-  position: absolute;
-  top: 69px;
   background: white;
   color: black;
   height: calc(100% - 205px);
   margin: 0;
+  position: absolute;
+  top: 64px;
   width: 300px;
 }
 
@@ -163,12 +163,12 @@ body,
 }
 
 .side-bar .close {
-  cursor: pointer;
-  position: relative;
-  left: 281px;
   background: white;
   color: black;
-  transform: rotate(90deg);
+  cursor: pointer;
+  left: 281px;
+  position: relative;
   top: -111px;
+  transform: rotate(90deg);
   width: 55px;
 }
