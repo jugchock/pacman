@@ -7,7 +7,7 @@
       </div>
 
       <div id="map">
-          <div class="btn-re-center-on"></div>
+          <div class="btn-re-center" [ngClass]="{'btn-re-center-on': followMe, 'btn-re-center-off': !followMe}" (click)="toggleFollowMe()"></div>
           <div class="proximity">
               <input type="number" name="proximity" min="1" max="50" [(ngModel)]="configService.beaconMaxProximity">
           </div>

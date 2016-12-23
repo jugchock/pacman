@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
+import { ConfigService } from '../shared';
 
 @Injectable()
 export class BeaconLayerService {
+    constructor(private configService: ConfigService) { }
+
     addBeaconSource(map, beacons) {
         map.addSource('beacons', {
             type: 'geojson',
@@ -34,9 +37,9 @@ export class BeaconLayerService {
                     type: 'exponential',
                     colorSpace: 'hcl',
                     stops: [
-                        [0, '#ee1c24'],
-                        [1, '#990008'],
-                        [3600, '#969696']
+                        [0, 'rgba(238, 28, 38, 1)'],
+                        [1, 'rgba(238, 28, 38, 0.5)'],
+                        [this.configService.beaconResetSeconds, 'rgba(238, 28, 38, 0)']
                     ]
                 }
             }

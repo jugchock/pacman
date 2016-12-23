@@ -19,8 +19,7 @@ export class AppComponent implements OnInit {
     message: string;
     visible: boolean;
     displaySidebar: string;
-    private userControlledPan = false;
-    private userControlledZoom = false;
+    followMe: boolean = true;
 
     // debug
     timeSinceUpdate: number;
@@ -96,9 +95,8 @@ export class AppComponent implements OnInit {
     onLocationUpdate(position) {
         let lng = this.currentLng = position.coords.longitude;
         let lat = this.currentLat = position.coords.latitude;
-        if (!this.userControlledPan) {
-            let zoom = this.userControlledZoom ? this.map.getZoom() : this.configService.defaultZoom;
-            this.map.flyTo({ center: [lng, lat], zoom });
+        if (this.followMe) {
+            this.map.flyTo({ center: [lng, lat], zoom: this.configService.defaultZoom });
         }
         this.locationService.updateLocationMarker(this.map, lng, lat);
         this.checkNearbyBeacons(lng, lat);
@@ -137,10 +135,15 @@ export class AppComponent implements OnInit {
             beacon.properties.beaconReset = Math.max(0, this.configService.beaconResetSeconds - timeLapsed);
         });
         let beaconSource = (this.map.getSource('beacons') as mapboxgl.GeoJSONSource);
+        if (!beaconSource) { return; }
         beaconSource.setData({
             type: 'FeatureCollection',
             features: beacons
         });
+    }
+
+    toggleFollowMe() {
+        this.followMe = !this.followMe;
     }
 
     onMapClick(e) {
@@ -168,8 +171,7 @@ export class AppComponent implements OnInit {
     }
 
     onMapMoveEnd(e) {
-        var zoom = this.map.getZoom();
-        localStorage.setItem('mapZoom', zoom.toString());
+        localStorage.setItem('mapZoom', this.map.getZoom().toString());
         localStorage.setItem('mapCenter', JSON.stringify(this.map.getCenter()));
     }
 }
