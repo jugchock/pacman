@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
         mapboxgl.accessToken = 'pk.eyJ1IjoicG9sYXJpcy1yaWRlcngiLCJhIjoiWExuREx5ayJ9.qK0_9TwlruP7fRC1hASJAA';
         this.map = new mapboxgl.Map({
             container: 'map',
-            style: 'mapbox://styles/mapbox/outdoors-v9',
+            style: 'mapbox://styles/mapbox/satellite-v9',
             center: this.getSavedMapCenter(),
             zoom: localStorage.getItem('mapZoom') || this.configService.defaultZoom,
             pitch: this.configService.defaultPitch
