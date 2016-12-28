@@ -22,7 +22,7 @@ export class LocationService {
     addLocationLayer(map) {
 
         var framesPerSecond = 15;
-        var initialOpacity = 1
+        var initialOpacity = 1;
         var opacity = initialOpacity;
         var initialRadius = 8;
         var radius = initialRadius;
@@ -63,7 +63,7 @@ export class LocationService {
                 map.setPaintProperty('location', 'circle-radius', radius);
                 map.setPaintProperty('location', 'circle-opacity', opacity);
 
-                if (opacity <= 0) {
+                if (opacity <= 0.1) {
                     radius = initialRadius;
                     opacity = initialOpacity;
                 }
