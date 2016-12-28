@@ -20,15 +20,60 @@ export class LocationService {
     }
 
     addLocationLayer(map) {
+
+        var framesPerSecond = 15;
+        var initialOpacity = 1
+        var opacity = initialOpacity;
+        var initialRadius = 8;
+        var radius = initialRadius;
+        var maxRadius = 18;
+
         map.addLayer({
             id: 'location',
-            type: 'circle',
-            source: 'location',
-            paint: {
-                'circle-radius': 10,
-                'circle-color': '#ff9900'
+            "source": "location",
+            "type": "circle",
+            "paint": {
+                "circle-radius": initialRadius,
+                "circle-radius-transition": {duration: 0},
+                "circle-opacity-transition": {duration: 0},
+                "circle-color": "#0D287F"
             }
         });
+
+        map.addLayer({
+            id: 'location1',
+            "source": "location",
+            "type": "circle",
+            "paint": {
+                "circle-radius": initialRadius,
+                "circle-radius-transition": {duration: 0},
+                "circle-opacity-transition": {duration: 0},
+                "circle-color": "#0D287F"
+            }
+        });
+
+        function animateMarker(timestamp) {
+
+            setTimeout(function(){
+                requestAnimationFrame(animateMarker);
+
+                radius += (maxRadius - radius) / framesPerSecond;
+                opacity -= ( .9 / framesPerSecond );
+
+                map.setPaintProperty('location', 'circle-radius', radius);
+                map.setPaintProperty('location', 'circle-opacity', opacity);
+
+                if (opacity <= 0) {
+                    radius = initialRadius;
+                    opacity = initialOpacity;
+                }
+
+            }, 1000 / framesPerSecond);
+
+        }
+
+        // Start the animation.
+        animateMarker(0);
     }
 
     updateLocationMarker(map, lng, lat) {
