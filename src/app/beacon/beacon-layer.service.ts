@@ -68,8 +68,8 @@ export class BeaconLayerService {
         // count values. Each range gets a different fill color.
         var layers = [
             [150, '#f28cb1'],
-            [20, '#f1f075'],
-            [0, '#39c237']
+            [20, '#fffa00'],
+            [0, '#07d300']
         ];
 
         layers.forEach((layer, i) => {
