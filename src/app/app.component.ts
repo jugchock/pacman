@@ -127,11 +127,6 @@ export class AppComponent implements OnInit {
         });
         nearbyBeacons.forEach((beacon) => {
             if (beacon.properties.beaconReset <= 0) {
-
-                // Added sound when you capture a beacon
-                var audio = new Audio('bing.mp3');
-                audio.play();
-
                 navigator.vibrate(200);
                 beacon.properties.captureTimestamp = Date.now();
                 beacon.properties.beaconReset = this.configService.beaconResetSeconds;
