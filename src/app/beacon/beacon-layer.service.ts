@@ -106,7 +106,7 @@ export class BeaconLayerService {
         map.addLayer({
             id: 'basscreek',
             type: 'fill',
-            source: 'maine',
+            source: 'basscreek',
             layout: {},
             paint: {
                 'fill-color': '#f4f4f4',
