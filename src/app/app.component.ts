@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
     message: string;
     visible: boolean;
     displaySidebar: string;
-    displayModal: string;
     followMe: boolean = true;
 
     // debug
