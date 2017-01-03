@@ -21,9 +21,19 @@
       </div>
 
       <footer>
-          <h1>{{pointsTotal}}</h1>
-          <div style="line-height: 1.7rem;">Beacons Found</div>
-          {{systemBadges | json}}
+
+          <div class="flex-grid">
+              <div class="col">
+                  <h1>{{pointsTotal}}</h1>
+                  <div style="line-height: 1.7rem;">Beacons Found</div>
+              </div>
+              <div class="col" style="padding-top: 8px;">
+                  <span *ngIf="systemBadges.troy"><img src="/assets/images/troy.png" alt="troy"></span>
+                  <span *ngIf="systemBadges.jug"><img src="/assets/images/chris.png" alt="chris"></span>
+                  <span *ngIf="systemBadges.polarisShort"><img src="/assets/images/bc-short.png" alt="troy"></span>
+                  <span *ngIf="systemBadges.polarisLong"><img src="/assets/images/bc-long.png" alt="troy"></span>
+              </div>
+          </div>
 
           <div class="layout-padding discount" *ngIf="pointsTotal > 9">
               You just earned
