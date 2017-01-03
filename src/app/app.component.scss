@@ -84,9 +84,16 @@ body,
 }
 
 .pacman .discount {
-  background: white;
-  color: black;
-  margin-top: 8px;
+  background: #0D287F;
+  padding: 20px 10px;
+  text-align: center;
+}
+
+.pacman .close-modal {
+  cursor: pointer;
+  font-weight: bold;
+  padding-bottom: 20px;
+  text-align: right;
 }
 
 .pacman footer {
