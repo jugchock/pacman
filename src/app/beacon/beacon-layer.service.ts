@@ -17,7 +17,7 @@ export class BeaconLayerService {
             }
         });
 
-        map.addSource('maine', {
+        map.addSource('basscreek', {
             'type': 'geojson',
             'data': {
                 'type': 'Feature',
@@ -105,7 +105,7 @@ export class BeaconLayerService {
         // });
 
         map.addLayer({
-            id: 'maine',
+            id: 'basscreek',
             type: 'fill',
             source: 'maine',
             layout: {},
