@@ -77,6 +77,7 @@ export class BeaconLayerService {
     }
 
     addBeaconLayers(map) {
+
         // map.addLayer({
         //     id: 'beaconRing',
         //     source: 'beacons',
@@ -102,17 +103,6 @@ export class BeaconLayerService {
         //         }
         //     }
         // });
-
-        map.addLayer({
-            id: 'basscreek',
-            type: 'fill',
-            source: 'basscreek',
-            layout: {},
-            paint: {
-                'fill-color': '#000000',
-                'fill-opacity': 0.3
-            }
-        });
 
         map.addLayer({
             id: 'beacons',
@@ -154,6 +144,17 @@ export class BeaconLayerService {
                 'text-halo-color': 'rgba(200, 200, 200, 0.4)',
                 'text-halo-width': 1,
                 'text-halo-blur': 2
+            }
+        });
+
+        map.addLayer({
+            id: 'basscreek',
+            type: 'fill',
+            source: 'basscreek',
+            layout: {},
+            paint: {
+                'fill-color': '#000000',
+                'fill-opacity': 0.2
             }
         });
     }
