@@ -77,7 +77,6 @@ export class BeaconLayerService {
     }
 
     addBeaconLayers(map) {
-
         // map.addLayer({
         //     id: 'beaconRing',
         //     source: 'beacons',
