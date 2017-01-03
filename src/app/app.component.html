@@ -21,23 +21,17 @@
       </div>
 
       <footer>
-          <div class="footer-container">
+          <h1>{{pointsTotal}}</h1>
+          <div style="line-height: 1.7rem;">Beacons Found</div>
 
-              <div class="text-center">
-                  <h1>{{pointsTotal}}</h1>
-                  <div>Beacons Found</div>
-              </div>
-
-              <div class="layout-padding discount" *ngIf="pointsTotal > 9">
-                  You just earned
-                  <span *ngIf="pointsTotal > 9 && pointsTotal < 15">5%</span>
-                  <span *ngIf="pointsTotal > 14 && pointsTotal < 20">10%</span>
-                  <span *ngIf="pointsTotal > 19">15%</span>off at <a href="http://www.trailmunchers.com" target="_blank">www.trailmunchers.com</a> Use code
-                  <span *ngIf="pointsTotal > 9 && pointsTotal < 15">POL-5-OFF</span>
-                  <span *ngIf="pointsTotal > 14 && pointsTotal < 20">POL-OFF-10</span>
-                  <span *ngIf="pointsTotal > 19">15-POL-OFF</span>
-              </div>
-
+          <div class="layout-padding discount" *ngIf="pointsTotal > 9">
+              You just earned
+              <span *ngIf="pointsTotal > 9 && pointsTotal < 15">5%</span>
+              <span *ngIf="pointsTotal > 14 && pointsTotal < 20">10%</span>
+              <span *ngIf="pointsTotal > 19">15%</span>off at <a href="http://www.trailmunchers.com" target="_blank">www.trailmunchers.com</a> Use code:
+              <span *ngIf="pointsTotal > 9 && pointsTotal < 15">POL-5-OFF</span>
+              <span *ngIf="pointsTotal > 14 && pointsTotal < 20">POL-OFF-10</span>
+              <span *ngIf="pointsTotal > 19">15-POL-OFF</span>
           </div>
       </footer>
 
