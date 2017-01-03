@@ -109,8 +109,8 @@ export class BeaconLayerService {
             source: 'basscreek',
             layout: {},
             paint: {
-                'fill-color': '#f4f4f4',
-                'fill-opacity': 0.8
+                'fill-color': '#000000',
+                'fill-opacity': 0.3
             }
         });
 
