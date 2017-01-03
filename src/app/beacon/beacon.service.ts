@@ -6,7 +6,7 @@ import { ConfigService } from '../shared';
 export class BeaconService {
     beacons: GeoJSON.Feature<GeoJSON.Point>[];
     beaconsCaptured;
-    beaconSystems = {};
+    systemBadges = {};
 
     constructor(private configService: ConfigService) {
         this.getStoredBeaconsCaptured();
@@ -40,6 +40,7 @@ export class BeaconService {
             jugHiddenBeacons, polarisShortHiddenBeacons, polarisLongHiddenBeacons)
             .map((coords) => this.createHiddenBeacon(coords));
         this.beacons = visibleBeacons.concat(hiddenBeacons);
+        ['troy', 'jug', 'polarisShort', 'polarisLong'].forEach((systemName) => this.hasAllBeaconsInSystem(systemName));
     }
 
     createVisibleBeacon(coords, systemName): GeoJSON.Feature<GeoJSON.Point> {
@@ -100,6 +101,7 @@ export class BeaconService {
             value: beacon.properties.value
         });
         localStorage.setItem('beaconsCaptured', JSON.stringify(this.beaconsCaptured));
+        this.hasAllBeaconsInSystem(beacon.properties.system);
     }
 
     calculatePoints() {
@@ -108,5 +110,19 @@ export class BeaconService {
             points += beacon.value;
         });
         return points;
+    }
+
+    hasAllBeaconsInSystem(systemName) {
+        if (!systemName) {
+            return false;
+        }
+        if (this.systemBadges[systemName]) {
+            return true;
+        }
+        var result = _.every(this.beacons, (beacon) => {
+            return beacon.properties.system !== systemName || beacon.properties.userCaptured;
+        });
+        this.systemBadges[systemName] = result;
+        return result;
     }
 }
