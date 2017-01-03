@@ -23,6 +23,7 @@
       <footer>
           <h1>{{pointsTotal}}</h1>
           <div style="line-height: 1.7rem;">Beacons Found</div>
+          {{systemBadges | json}}
 
           <div class="layout-padding discount" *ngIf="pointsTotal > 9">
               You just earned

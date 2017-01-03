@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
     visible: boolean;
     displaySidebar: string;
     followMe: boolean = true;
+    systemBadges;
 
     // debug
     timeSinceUpdate: number;
@@ -33,6 +34,7 @@ export class AppComponent implements OnInit {
     ) {
         this.displaySidebar = 'hide-class';
         this.visible = false;
+        this.systemBadges = this.beaconService.systemBadges;
     }
 
     toggleSidebar() {
