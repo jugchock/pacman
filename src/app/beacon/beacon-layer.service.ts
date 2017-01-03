@@ -19,6 +19,33 @@ export class BeaconLayerService {
     }
 
     addBeaconLayers(map) {
+
+        // map.addLayer({
+        //     id: 'beaconRing',
+        //     source: 'beacons',
+        //     type: 'circle',
+        //     paint: {
+        //         'circle-radius': {
+        //             property: 'type',
+        //             type: 'categorical',
+        //             stops: [
+        //                 ['visible', 12],
+        //                 ['hidden', 7]
+        //             ]
+        //         },
+        //         'circle-color': {
+        //             property: 'beaconReset',
+        //             type: 'exponential',
+        //             colorSpace: 'hcl',
+        //             stops: [
+        //                 [0, 'rgba(0, 0, 0, 1)'],
+        //                 [1, 'rgba(0, 0, 0, 0.5)'],
+        //                 [this.configService.beaconResetSeconds, 'rgba(0, 0, 0, 0)']
+        //             ]
+        //         }
+        //     }
+        // });
+
         map.addLayer({
             id: 'beacons',
             source: 'beacons',
