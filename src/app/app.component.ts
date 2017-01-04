@@ -132,6 +132,7 @@ export class AppComponent implements OnInit {
                 navigator.vibrate(200);
                 beacon.properties.captureTimestamp = Date.now();
                 beacon.properties.beaconReset = this.configService.beaconResetSeconds;
+                beacon.properties.userCaptured = true;
                 this.beaconService.addCapturedBeacon(beacon);
                 this.pointsTotal = this.beaconService.calculatePoints();
             }

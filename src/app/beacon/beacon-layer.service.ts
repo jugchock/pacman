@@ -23,10 +23,11 @@ export class BeaconLayerService {
                 'type': 'Feature',
                 'geometry': {
                     'type': 'Polygon',
-                    'coordinates': [[[
-                        -93.40063333511353,
-                        45.05962326467859
-                    ],
+                    'coordinates': [[
+                        [
+                            -93.40063333511353,
+                            45.05962326467859
+                        ],
                         [
                             -93.40516090393066,
                             45.05891087804328
@@ -70,39 +71,40 @@ export class BeaconLayerService {
                         [
                             -93.40063333511353,
                             45.05962326467859
-                        ]]]
+                        ]
+                    ]]
                 }
             }
         });
     }
 
     addBeaconLayers(map) {
-
-        // map.addLayer({
-        //     id: 'beaconRing',
-        //     source: 'beacons',
-        //     type: 'circle',
-        //     paint: {
-        //         'circle-radius': {
-        //             property: 'type',
-        //             type: 'categorical',
-        //             stops: [
-        //                 ['visible', 12],
-        //                 ['hidden', 7]
-        //             ]
-        //         },
-        //         'circle-color': {
-        //             property: 'beaconReset',
-        //             type: 'exponential',
-        //             colorSpace: 'hcl',
-        //             stops: [
-        //                 [0, 'rgba(0, 0, 0, 1)'],
-        //                 [1, 'rgba(0, 0, 0, 0.5)'],
-        //                 [this.configService.beaconResetSeconds, 'rgba(0, 0, 0, 0)']
-        //             ]
-        //         }
-        //     }
-        // });
+        map.addLayer({
+            id: 'beaconRing',
+            source: 'beacons',
+            type: 'circle',
+            paint: {
+                'circle-radius': {
+                    property: 'type',
+                    type: 'categorical',
+                    stops: [
+                        ['visible', 12],
+                        ['hidden', 7]
+                    ]
+                },
+                'circle-color': {
+                    property: 'beaconReset',
+                    type: 'exponential',
+                    colorSpace: 'hcl',
+                    stops: [
+                        [0, 'rgba(0, 0, 0, 1)'],
+                        [1, 'rgba(0, 0, 0, 0.5)'],
+                        [this.configService.beaconResetSeconds, 'rgba(0, 0, 0, 0)']
+                    ]
+                }
+            },
+            filter: ['all', ['==', 'type', 'visible'], ['==', 'userCaptured', false]]
+        });
 
         map.addLayer({
             id: 'beacons',
@@ -199,5 +201,16 @@ export class BeaconLayerService {
                 'text-size': 14
             }
         });
+
+        // map.addLayer({
+        //     id: 'clusterRing',
+        //     source: 'beacons',
+        //     type: 'circle',
+        //     paint: {
+        //         'circle-radius': 14,
+        //         'circle-color': '#000000'
+        //     },
+        //     filter: ['>', 'point_count', 0]
+        // });
     }
 }
